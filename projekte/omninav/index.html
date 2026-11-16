@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de" data-lang="de"
+      data-titel-de="OmniNav – Vincent Petsch"
+      data-titel-en="OmniNav – Vincent Petsch">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniNav – Vincent Petsch</title>
+  <meta name="description" content="OmniNav: ein Transformer lernt, ein Fahrzeug nur anhand der rohen Karte durch zufällige Labyrinthe zu steuern.">
+  <link rel="stylesheet" href="../../style.css">
+  <script src="../../js/lang.js"></script>
+</head>
+<body class="projekt" data-basis="../../" data-slug="omninav" style="--akzent:#8b3dff">
+  <div class="fortschritt"></div>
+
+  <header class="kopf">
+    <div class="wrap">
+      <a class="logo" href="../../"><i></i>Vincent Petsch</a>
+      <nav>
+        <a href="../../#projekte"><span lang="de">← Alle Projekte</span><span lang="en">← All projects</span></a>
+      </nav>
+      <div class="sprache" role="group" aria-label="Sprache / Language">
+        <button type="button" data-setlang="de" aria-pressed="true">DE</button>
+        <button type="button" data-setlang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="p-hero">
+      <div class="wrap">
+        <span class="p-nr">04</span>
+        <h1>OmniNav</h1>
+        <p class="slogan rein">
+          <span lang="de">Ein Transformer, der auf <em>die ganze Karte</em> schaut.</span>
+          <span lang="en">A transformer that looks at <em>the whole map.</em></span>
+        </p>
+        <div class="chips rein" style="--d:.1s"><span>Transformer</span><span>Navigation</span><span>PPO</span><span>Curriculum</span><span>Attention</span></div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="buehne dunkel quadrat rein">
+        <video data-auto muted loop playsinline controls preload="none" poster="media/episoden.webp" width="768" height="768">
+          <source src="media/episoden.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p class="unterzeile">
+        <span lang="de">Geschaffte Fahrten durch zufällig erzeugte Karten. Die helle Spur ist der gefahrene Weg.</span>
+        <span lang="en">Completed runs through randomly generated maps. The bright trail is the path driven.</span>
+      </p>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <p class="text-gross rein">
+          <span lang="de">Ein Fahrzeug, das in alle Richtungen fahren kann, soll durch zufällige Labyrinthe ans Ziel finden. Es bekommt nur die rohe Karte: wo Wände sind, wo das Ziel liegt, wo es selbst steht. Kein A*, kein Planer. Ein Transformer lernt den Weg selbst, und man kann ihm dabei zusehen, wohin er schaut.</span>
+          <span lang="en">A vehicle that can drive in any direction has to find its way through random mazes. All it gets is the raw map: where the walls are, where the goal is, where it stands. No A*, no planner. A transformer learns the way by itself, and you can watch where it is looking while it does.</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="zahlen">
+        <div class="kachel rein">
+          <div class="wert"><span class="zahl" data-wert="4.75" data-dez="2">4,75</span><small><span lang="de">Mio.</span><span lang="en">M</span></small></div>
+          <p><span lang="de">Parameter: 6 Schichten mit je 8 Attention-Köpfen</span><span lang="en">parameters: 6 layers with 8 attention heads each</span></p>
+        </div>
+        <div class="kachel rein" style="--d:.1s">
+          <div class="wert"><span class="zahl" data-wert="8" data-dez="0">8</span><small>Level</small></div>
+          <p><span lang="de">vom leeren Raum bis zum Labyrinth mit Gängen, durch die das Fahrzeug nur längs passt</span><span lang="en">from an empty room to a maze with corridors the vehicle only fits through lengthwise</span></p>
+        </div>
+        <div class="kachel rein" style="--d:.2s">
+          <div class="wert"><span class="zahl" data-wert="3" data-dez="0">3</span><small><span lang="de">Kanäle</span><span lang="en">channels</span></small></div>
+          <p><span lang="de">sind alles, was das Netz sieht: Wände, Ziel und die eigene Position</span><span lang="en">are all the network sees: walls, goal and its own position</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <div class="abschnitt-kopf rein">
+          <h2><span lang="de">Vom leeren Raum zum Labyrinth</span><span lang="en">From empty room to maze</span></h2>
+        </div>
+        <div class="level">
+          <figure class="rein"><img src="media/level1.webp" width="335" height="335" loading="lazy" alt="Level empty: leerer Raum"><figcaption>empty</figcaption></figure>
+          <figure class="rein" style="--d:.05s"><img src="media/level2.webp" width="335" height="334" loading="lazy" alt="Level scatter: wenige verstreute Hindernisse"><figcaption>scatter</figcaption></figure>
+          <figure class="rein" style="--d:.1s"><img src="media/level3.webp" width="335" height="335" loading="lazy" alt="Level clutter: viele Hindernisse"><figcaption>clutter</figcaption></figure>
+          <figure class="rein" style="--d:.15s"><img src="media/level4.webp" width="335" height="335" loading="lazy" alt="Level rooms: Zimmer mit Türen"><figcaption>rooms</figcaption></figure>
+          <figure class="rein" style="--d:.2s"><img src="media/level5.webp" width="335" height="335" loading="lazy" alt="Level warren: viele kleine Kammern"><figcaption>warren</figcaption></figure>
+          <figure class="rein" style="--d:.25s"><img src="media/level6.webp" width="335" height="334" loading="lazy" alt="Level maze: Labyrinth"><figcaption>maze</figcaption></figure>
+          <figure class="rein" style="--d:.3s"><img src="media/level7.webp" width="335" height="335" loading="lazy" alt="Level squeeze: sehr enge Gänge"><figcaption>squeeze</figcaption></figure>
+        </div>
+        <p class="unterzeile rein">
+          <span lang="de">Sieben der acht Level. Jede Karte wird zufällig erzeugt und vorab geprüft, ob das Fahrzeug überhaupt durchkommt. Der Stern ist das Ziel, die Farbe zeigt den Abstand dorthin.</span>
+          <span lang="en">Seven of the eight levels. Every map is generated at random and checked beforehand to make sure the vehicle can get through at all. The star is the goal, the colour shows the distance to it.</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="abschnitt-kopf rein">
+        <h2><span lang="de">So funktioniert es</span><span lang="en">How it works</span></h2>
+      </div>
+      <div class="schritte">
+        <div class="schritt rein">
+          <h3><span lang="de">Karte in Stücken</span><span lang="en">The map in pieces</span></h3>
+          <p><span lang="de">Die Karte wird in kleine Kacheln zerlegt. Jede Kachel wird zu einem Token, dazu kommt ein Token für den Zustand des Fahrzeugs.</span><span lang="en">The map is cut into small tiles. Each tile becomes a token, plus one token for the state of the vehicle.</span></p>
+        </div>
+        <div class="schritt rein" style="--d:.1s">
+          <h3><span lang="de">Attention über alles</span><span lang="en">Attention over everything</span></h3>
+          <p><span lang="de">Der Transformer setzt alle Kacheln zueinander in Beziehung. Wohin er dabei schaut, lässt sich ohne Mehrkosten live mitlesen.</span><span lang="en">The transformer relates all tiles to each other. Where it is looking can be read out live at no extra cost.</span></p>
+        </div>
+        <div class="schritt rein" style="--d:.2s">
+          <h3><span lang="de">Direkt ans Lenkrad</span><span lang="en">Straight to the wheel</span></h3>
+          <p><span lang="de">Am Ende stehen drei Zahlen: vorwärts, seitwärts, drehen. Gelernt wird mit PPO, und das Curriculum schaltet hoch, sobald ein Level sitzt.</span><span lang="en">The output is three numbers: forward, sideways, turn. Training uses PPO, and the curriculum moves up as soon as a level works.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <div class="galerie">
+          <figure class="rein">
+            <img src="media/attention.webp" width="1400" height="862" loading="lazy"
+                 alt="Raster aus Karten mit farbigen Überlagerungen, die zeigen, auf welche Kartenbereiche das Netz in jeder Schicht achtet">
+            <figcaption>
+              <span lang="de">Wohin das Netz schaut: Attention über die Karte, Schicht für Schicht, zu vier Zeitpunkten einer Fahrt. Hell bedeutet viel Aufmerksamkeit.</span>
+              <span lang="en">Where the network looks: attention over the map, layer by layer, at four moments of one run. Bright means a lot of attention.</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <a class="weiter" id="weiter" href="../../"></a>
+  </main>
+
+  <footer class="fuss">
+    <div class="wrap">
+      <span>© 2026 Vincent Petsch</span>
+      <a class="mono" href="../../">vincent-petsch.de</a>
+    </div>
+  </footer>
+
+  <script src="../projekte.js"></script>
+  <script src="../../js/netz.js"></script>
+  <script src="../../js/site.js"></script>
+</body>
+</html>

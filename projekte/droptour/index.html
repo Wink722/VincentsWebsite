@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de" data-lang="de"
+      data-titel-de="DropTour – Vincent Petsch"
+      data-titel-en="DropTour – Vincent Petsch">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DropTour – Vincent Petsch</title>
+  <meta name="description" content="DropTour: Abholpunkte für Pakete, die jeden Tag neu gesetzt werden – geplant auf echten Straßen- und Gehwegnetzen.">
+  <link rel="stylesheet" href="../../style.css">
+  <script src="../../js/lang.js"></script>
+</head>
+<body class="projekt" data-basis="../../" data-slug="droptour" style="--akzent:#f2600c">
+  <div class="fortschritt"></div>
+
+  <header class="kopf">
+    <div class="wrap">
+      <a class="logo" href="../../"><i></i>Vincent Petsch</a>
+      <nav>
+        <a href="../../#projekte"><span lang="de">← Alle Projekte</span><span lang="en">← All projects</span></a>
+      </nav>
+      <div class="sprache" role="group" aria-label="Sprache / Language">
+        <button type="button" data-setlang="de" aria-pressed="true">DE</button>
+        <button type="button" data-setlang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="p-hero">
+      <div class="wrap">
+        <span class="p-nr">02</span>
+        <h1>DropTour</h1>
+        <p class="slogan rein">
+          <span lang="de">Nicht jedes Haus anfahren: Abholpunkte, die <em>jeden Tag woanders</em> stehen.</span>
+          <span lang="en">Skip the doorstep: pickup points that <em>move every single day.</em></span>
+        </p>
+        <div class="chips rein" style="--d:.1s"><span>Logistik</span><span>OpenStreetMap</span><span>Reinforcement Learning</span><span>ALNS</span><span>LKH-3</span></div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="buehne rein">
+        <video data-auto muted loop playsinline controls preload="none" poster="media/film.webp" width="1280" height="666">
+          <source src="media/film.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p class="unterzeile">
+        <span lang="de">20 Tage im Zeitraffer: 60 selbstfahrende Busse halten in 18 Dörfern, Zusteller pendeln vom Depot zu den Treffpunkten. Dunkle Punkte sind Häuser mit Paket an diesem Tag.</span>
+        <span lang="en">20 days in fast motion: 60 self-driving buses stop in 18 villages while couriers shuttle from the depot to the meeting points. Dark dots are houses with a parcel that day. Labels in the film are in German.</span>
+      </p>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <p class="text-gross rein">
+          <span lang="de">Statt jedes Haus einzeln anzufahren, werden Pakete an Abholpunkten gebündelt. DropTour plant, wo diese Punkte heute stehen und in welcher Reihenfolge sie beliefert werden. Die Idee dahinter: selbstfahrende Paketstationen, deren Standort keine Infrastruktur ist, sondern eine Tagesentscheidung.</span>
+          <span lang="en">Instead of driving to every single house, parcels are bundled at pickup points. DropTour plans where those points stand today and in which order they are supplied. The idea behind it: self-driving parcel lockers whose location is not infrastructure but a daily decision.</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="zahlen">
+        <div class="kachel rein">
+          <div class="wert"><span class="zahl" data-wert="63491" data-dez="0">63.491</span></div>
+          <p><span lang="de">Wohngebäude in Karlsruhe und 5.081 mögliche Halte</span><span lang="en">residential buildings in Karlsruhe and 5,081 possible stops</span></p>
+        </div>
+        <div class="kachel rein" style="--d:.1s">
+          <div class="wert"><span class="zahl" data-wert="18" data-dez="0">18</span><small><span lang="de">Dörfer</span><span lang="en">villages</span></small></div>
+          <p><span lang="de">im Kraichgau mit 35.754 Einwohnern, verteilt auf 155 km²</span><span lang="en">in the Kraichgau region with 35,754 residents across 155 km²</span></p>
+        </div>
+        <div class="kachel rein" style="--d:.2s">
+          <div class="wert"><span class="zahl" data-wert="0.3" data-dez="1">0,3</span><small>s</small></div>
+          <p><span lang="de">braucht die gelernte Policy, um einen ganzen Zustelltag zu planen</span><span lang="en">is all the learned policy needs to plan an entire delivery day</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <div class="abschnitt-kopf rein">
+          <h2><span lang="de">So funktioniert es</span><span lang="en">How it works</span></h2>
+        </div>
+        <div class="schritte">
+          <div class="schritt rein">
+            <h3><span lang="de">Zwei Welten</span><span lang="en">Two worlds</span></h3>
+            <p><span lang="de">In der Stadt setzt ein Zusteller täglich neue Abholpunkte. Auf dem Land fahren Busse als mobile Paketstationen mehrere Halte am Tag an und bleiben abends stehen, wo sie zuletzt waren.</span><span lang="en">In the city, a courier sets new pickup points each day. In the countryside, buses act as mobile parcel lockers, serve several stops a day and stay overnight wherever they stopped last.</span></p>
+          </div>
+          <div class="schritt rein" style="--d:.1s">
+            <h3><span lang="de">Klassisch und gelernt</span><span lang="en">Classic and learned</span></h3>
+            <p><span lang="de">Klassische Optimierung und eine per Reinforcement Learning trainierte Policy lösen dieselben Tage. So lässt sich direkt vergleichen, was die Policy wirklich kann.</span><span lang="en">Classic optimisation and a policy trained with reinforcement learning solve the very same days. That makes it easy to compare what the policy can really do.</span></p>
+          </div>
+          <div class="schritt rein" style="--d:.2s">
+            <h3><span lang="de">Alles wird nachgeprüft</span><span lang="en">Everything gets checked</span></h3>
+            <p><span lang="de">Ein eigener Zulässigkeits-Checker rechnet jede einzelne Lösung nach. Jede Zahl im Projekt ist dort durchgelaufen.</span><span lang="en">A dedicated feasibility checker verifies every single solution. Every number in the project has been through it.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <a class="weiter" id="weiter" href="../../"></a>
+  </main>
+
+  <footer class="fuss">
+    <div class="wrap">
+      <span>© 2026 Vincent Petsch</span>
+      <a class="mono" href="../../">vincent-petsch.de</a>
+    </div>
+  </footer>
+
+  <script src="../projekte.js"></script>
+  <script src="../../js/netz.js"></script>
+  <script src="../../js/site.js"></script>
+</body>
+</html>

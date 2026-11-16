@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de" data-lang="de"
+      data-titel-de="TSP Road Solver – Vincent Petsch"
+      data-titel-en="TSP Road Solver – Vincent Petsch">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TSP Road Solver – Vincent Petsch</title>
+  <meta name="description" content="TSP Road Solver: kürzeste Routen über echte Straßennetze aus OpenStreetMap, gelernt per Reinforcement Learning.">
+  <link rel="stylesheet" href="../../style.css">
+  <script src="../../js/lang.js"></script>
+</head>
+<body class="projekt" data-basis="../../" data-slug="tsp-road-solver" style="--akzent:#2f5bff">
+  <div class="fortschritt"></div>
+
+  <header class="kopf">
+    <div class="wrap">
+      <a class="logo" href="../../"><i></i>Vincent Petsch</a>
+      <nav>
+        <a href="../../#projekte"><span lang="de">← Alle Projekte</span><span lang="en">← All projects</span></a>
+      </nav>
+      <div class="sprache" role="group" aria-label="Sprache / Language">
+        <button type="button" data-setlang="de" aria-pressed="true">DE</button>
+        <button type="button" data-setlang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="p-hero">
+      <div class="wrap">
+        <span class="p-nr">01</span>
+        <h1>TSP Road Solver</h1>
+        <p class="slogan rein">
+          <span lang="de">Kürzeste Route über echte Straßen, <em>in Millisekunden.</em></span>
+          <span lang="en">The shortest route over real streets, <em>in milliseconds.</em></span>
+        </p>
+        <div class="chips rein" style="--d:.1s"><span>Reinforcement Learning</span><span>OpenStreetMap</span><span>Attention</span><span>POMO</span><span>Streamlit</span></div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="buehne rein">
+        <canvas class="netz" id="demo" data-netz data-interaktiv data-zelle="58" data-ziele="12"
+                role="img" aria-label="Animation: eine Route verbindet Zielpunkte entlang eines Straßennetzes"></canvas>
+        <div class="buehne-leiste">
+          <button class="knopf" type="button" data-netz-neu="demo"><span lang="de">Neue Stadt</span><span lang="en">New city</span> <span class="pfeil">↻</span></button>
+        </div>
+      </div>
+      <p class="unterzeile">
+        <span lang="de">Zum Ausprobieren: Tippe ins Netz, um Ziele zu setzen oder zu entfernen. Die Animation ist eine Illustration mit einer einfachen Heuristik im Browser, nicht das trainierte Modell.</span>
+        <span lang="en">Try it: tap the network to add or remove stops. The animation is an illustration using a simple heuristic in your browser, not the trained model.</span>
+      </p>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <p class="text-gross rein">
+          <span lang="de">Ein Fahrzeug soll 3 bis 200 Ziele in einer Stadt abfahren. In welcher Reihenfolge? Der Solver rechnet auf dem echten Straßennetz aus OpenStreetMap, mit Einbahnstraßen und ohne Luftlinien-Abkürzungen, und hat die Antwort per Reinforcement Learning gelernt.</span>
+          <span lang="en">A vehicle has to visit 3 to 200 stops in a city. In which order? The solver works on the real street network from OpenStreetMap, one-way streets included and no straight-line shortcuts, and it learned its answer through reinforcement learning.</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="zahlen">
+        <div class="kachel rein">
+          <div class="wert"><span class="zahl" data-wert="0.26" data-dez="2">0,26</span><small>s</small></div>
+          <p><span lang="de">für eine Route über 200 Ziele</span><span lang="en">for a route across 200 stops</span></p>
+        </div>
+        <div class="kachel rein" style="--d:.1s">
+          <div class="wert"><span class="zahl" data-wert="0.41" data-dez="2">0,41</span><small>%</small></div>
+          <p><span lang="de">Abstand zur Referenzlösung in New York bei 12 Zielen. Die Stadt kam im Training nie vor.</span><span lang="en">gap to the reference solution in New York with 12 stops. The model never saw that city in training.</span></p>
+        </div>
+        <div class="kachel rein" style="--d:.2s">
+          <div class="wert">3–<span class="zahl" data-wert="200" data-dez="0">200</span></div>
+          <p><span lang="de">Ziele mit einem einzigen Modell, auch auf der CPU</span><span lang="en">stops handled by one single model, even on a CPU</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <div class="abschnitt-kopf rein">
+          <h2><span lang="de">So funktioniert es</span><span lang="en">How it works</span></h2>
+        </div>
+        <div class="schritte">
+          <div class="schritt rein">
+            <h3><span lang="de">Echte Distanzen</span><span lang="en">Real distances</span></h3>
+            <p><span lang="de">Der wichtigste Input sind nicht Koordinaten, sondern die Fahrstrecken zwischen allen Zielen. Hin- und Rückweg sind wegen Einbahnstraßen oft verschieden lang.</span><span lang="en">The main input is not coordinates but the driving distances between all stops. Because of one-way streets, there and back are often not the same length.</span></p>
+          </div>
+          <div class="schritt rein" style="--d:.1s">
+            <h3><span lang="de">Einmal hinschauen</span><span lang="en">Look once</span></h3>
+            <p><span lang="de">Ein Attention-Encoder liest die Aufgabe ein einziges Mal. Danach wählt ein leichter Decoder Ziel für Ziel. Das macht die Antwort so schnell.</span><span lang="en">An attention encoder reads the problem exactly once. A lightweight decoder then picks stop after stop. That is what makes the answer so fast.</span></p>
+          </div>
+          <div class="schritt rein" style="--d:.2s">
+            <h3><span lang="de">Sieben Städte als Schule</span><span lang="en">Seven cities as a school</span></h3>
+            <p><span lang="de">Trainiert auf sieben deutschen Städten gleichzeitig. Das Gelernte überträgt sich auf Städte, die das Modell nie gesehen hat.</span><span lang="en">Trained on seven German cities at once. What it learns carries over to cities the model has never seen.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <a class="weiter" id="weiter" href="../../"></a>
+  </main>
+
+  <footer class="fuss">
+    <div class="wrap">
+      <span>© 2026 Vincent Petsch</span>
+      <a class="mono" href="../../">vincent-petsch.de</a>
+    </div>
+  </footer>
+
+  <script src="../projekte.js"></script>
+  <script src="../../js/netz.js"></script>
+  <script src="../../js/site.js"></script>
+</body>
+</html>
