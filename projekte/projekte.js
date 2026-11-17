@@ -18,7 +18,7 @@ window.PROJEKTE = [
       wert: { de: '0,26 s', en: '0.26 s' },
       text: { de: 'für eine Route über 200 Ziele', en: 'for a route across 200 stops' }
     },
-    tags: ['Reinforcement Learning', 'OpenStreetMap', 'Attention'],
+    tags: ['Reinforcement Learning', 'OpenStreetMap', 'Routenplanung'],
     vorschau: null // null = animiertes Straßennetz statt Video
   },
   {

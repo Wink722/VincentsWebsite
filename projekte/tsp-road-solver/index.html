@@ -35,7 +35,7 @@
           <span lang="de">Kürzeste Route über echte Straßen, <em>in Millisekunden.</em></span>
           <span lang="en">The shortest route over real streets, <em>in milliseconds.</em></span>
         </p>
-        <div class="chips rein" style="--d:.1s"><span>Reinforcement Learning</span><span>OpenStreetMap</span><span>Attention</span><span>POMO</span><span>Streamlit</span></div>
+        <div class="chips rein" style="--d:.1s"><span>Reinforcement Learning</span><span>OpenStreetMap</span><span>Routenplanung</span><span>Streamlit</span></div>
       </div>
     </section>
 
@@ -86,12 +86,12 @@
         </div>
         <div class="schritte">
           <div class="schritt rein">
-            <h3><span lang="de">Echte Distanzen</span><span lang="en">Real distances</span></h3>
-            <p><span lang="de">Der wichtigste Input sind nicht Koordinaten, sondern die Fahrstrecken zwischen allen Zielen. Hin- und Rückweg sind wegen Einbahnstraßen oft verschieden lang.</span><span lang="en">The main input is not coordinates but the driving distances between all stops. Because of one-way streets, there and back are often not the same length.</span></p>
+            <h3><span lang="de">Echte Straßen</span><span lang="en">Real streets</span></h3>
+            <p><span lang="de">Gerechnet wird mit echten Fahrstrecken statt Luftlinie. Hin- und Rückweg sind wegen Einbahnstraßen oft verschieden lang.</span><span lang="en">The solver works with real driving distances instead of straight lines. Because of one-way streets, there and back are often not the same length.</span></p>
           </div>
           <div class="schritt rein" style="--d:.1s">
-            <h3><span lang="de">Einmal hinschauen</span><span lang="en">Look once</span></h3>
-            <p><span lang="de">Ein Attention-Encoder liest die Aufgabe ein einziges Mal. Danach wählt ein leichter Decoder Ziel für Ziel. Das macht die Antwort so schnell.</span><span lang="en">An attention encoder reads the problem exactly once. A lightweight decoder then picks stop after stop. That is what makes the answer so fast.</span></p>
+            <h3><span lang="de">Gelernt statt programmiert</span><span lang="en">Learned, not hand-coded</span></h3>
+            <p><span lang="de">Das Modell hat an sehr vielen Beispielrouten selbst herausgefunden, welche Reihenfolge gut ist. Im Einsatz liefert es die Antwort dann in Sekundenbruchteilen.</span><span lang="en">The model figured out by itself, from a huge number of example routes, which order works well. In use, it then delivers its answer in a fraction of a second.</span></p>
           </div>
           <div class="schritt rein" style="--d:.2s">
             <h3><span lang="de">Sieben Städte als Schule</span><span lang="en">Seven cities as a school</span></h3>
