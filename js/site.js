@@ -168,6 +168,33 @@
     });
   }
 
+  /* ---------- Ameisen im Hero (lädt erst beim Klick, js/ameisen.js) ---------- */
+  var los = document.getElementById('ameisen-los');
+  if (los) {
+    var gimmick = null, laedt = false;
+    var ui = {
+      hinweis: document.getElementById('ameisen-hinweis'),
+      stand: document.getElementById('ameisen-stand'),
+      zurueck: document.getElementById('ameisen-zurueck')
+    };
+    los.addEventListener('click', function () {
+      if (laedt) return;
+      if (gimmick) { gimmick.beenden(); gimmick = null; }
+      laedt = true; los.setAttribute('aria-busy', 'true');
+      import(new URL('js/ameisen.js', document.baseURI + basis).href).then(function (m) {
+        return m.start(document.querySelector('.hero'), ui);
+      }).then(function (g) {
+        gimmick = g; window.ameisen = g;
+      }).catch(function (e) {
+        console.warn('Ameisen:', e);
+      }).then(function () { laedt = false; los.removeAttribute('aria-busy'); });
+    });
+    ui.zurueck.addEventListener('click', function () {
+      if (gimmick) { gimmick.beenden(); gimmick = null; }
+      los.focus();
+    });
+  }
+
   /* ---------- Straßennetz-Animationen ---------- */
   if (window.Netz) {
     document.querySelectorAll('canvas[data-netz]').forEach(function (c) {

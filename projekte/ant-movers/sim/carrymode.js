@@ -49,13 +49,15 @@ export class CarryMode {
    * area: Bereich (position relative oder absolute). policy: Policy aus loadPolicy.
    * Optionen: bl Pixel je Körperlänge, perSlot Ameisen je Griffplatz, maxAnts, minPerSlot
    * (darunter wird ein Element nicht angeboten), maxAspect, factor Zeitfaktor, tMaxS,
-   * carry/walls Selektoren, onStatus(status) für die Anzeige.
+   * carry/walls Selektoren, textWalls Selektor für Elemente, deren Wand nur die Ausdehnung ihres
+   * Texts ist (Range, etwa Überschriften mit display: block), canvasClass Klasse der Leinwand,
+   * onStatus(status) für die Anzeige.
    */
   constructor(area, policy, opts = {}) {
     this.area = area;
     this.policy = policy;
     this.o = { bl: 12, perSlot: 6, maxAnts: 500, minPerSlot: 2, maxAspect: 6, factor: 4, tMaxS: 300,
-      carry: "[data-carry]", walls: "[data-wall]", seed: 20261125, onStatus: () => {}, ...opts };
+      carry: "[data-carry]", walls: "[data-wall]", textWalls: null, canvasClass: "", seed: 20261125, onStatus: () => {}, ...opts };
     this.rng = makeRng(this.o.seed);
     this.episode = 0;
     this.phase = "idle"; // idle | pick | target | run | done
@@ -65,6 +67,7 @@ export class CarryMode {
     Object.assign(this.canvas.style, { position: "absolute", left: "0", top: "0", width: "100%", height: "100%",
       pointerEvents: "none", zIndex: "5" });
     this.canvas.setAttribute("aria-hidden", "true");
+    if (this.o.canvasClass) this.canvas.className = this.o.canvasClass;
     area.appendChild(this.canvas);
     this.renderer = new Renderer(this.canvas, { clear: true, drawLoad: false });
     this.renderer.layers.phero = false;
@@ -75,6 +78,7 @@ export class CarryMode {
     this._resize = () => { if (this.phase !== "idle") this.reset(); };
     window.addEventListener("resize", this._resize);
     this.raf = null;
+    this.paused = false;
   }
 
   /** Kandidaten: wählbare Elemente im Bereich. */
@@ -97,13 +101,19 @@ export class CarryMode {
 
   /** Bounding-Box eines Elements als Wand [cx, cy, hx, hy] in Welteinheiten. */
   _box(fr, el) {
-    const b = el.getBoundingClientRect();
+    let b = el.getBoundingClientRect();
+    if (this.o.textWalls && el.matches(this.o.textWalls)) {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      b = range.getBoundingClientRect();
+    }
     const [cx, cy] = this._toWorld(fr, b.left + b.width / 2, b.top + b.height / 2);
     return [cx, cy, b.width / 2 / fr.bl, b.height / 2 / fr.bl];
   }
 
   _walls(fr, except) {
-    const els = new Set([...this.candidates(), ...this.area.querySelectorAll(this.o.walls)]);
+    const els = new Set([...this.candidates(), ...this.area.querySelectorAll(this.o.walls),
+      ...(this.o.textWalls ? this.area.querySelectorAll(this.o.textWalls) : [])]);
     els.delete(except);
     const walls = [...els].filter((e) => e.offsetParent !== null).map((e) => this._box(fr, e));
     // Streifen zwischen Bereich und gerundeter Arena (weniger als eine Körperlänge)
@@ -155,9 +165,30 @@ export class CarryMode {
       return;
     }
     if (this.phase === "target" || this.phase === "run" || this.phase === "done") {
-      if (e.target.closest(this.o.carry) || e.target.closest(this.o.walls)) return; // Elemente bleiben klickbar
+      if (e.target.closest(this.o.carry) || e.target.closest(this.o.walls) ||
+        (this.o.textWalls && e.target.closest(this.o.textWalls))) return; // Elemente bleiben klickbar
       e.preventDefault();
       this._target(e.clientX, e.clientY);
+    }
+  }
+
+  /** Element ohne Klick zur Last machen (etwa ein eingefügtes Abzeichen). Rückgabe wie assess. */
+  select(el) {
+    if (this.phase === "run" || this.phase === "done") this._stopSim();
+    const a = this.assess(el);
+    if (a.ok) this._select(el, a);
+    return a;
+  }
+
+  /** Anhalten (etwa außer Sicht) und weiterlaufen lassen, ohne Zeitsprung. */
+  setPaused(p) {
+    this.paused = !!p;
+    if (this.paused) {
+      if (this.raf !== null) cancelAnimationFrame(this.raf);
+      this.raf = null;
+    } else if (this.phase === "run") {
+      this.lastNow = null;
+      this._loop();
     }
   }
 
@@ -260,10 +291,10 @@ export class CarryMode {
   }
 
   _loop() {
-    if (this.raf !== null) return;
+    if (this.raf !== null || this.paused) return;
     const frame = (now) => {
       this.raf = null;
-      if (this.phase !== "run") return;
+      if (this.phase !== "run" || this.paused) return;
       this.raf = requestAnimationFrame(frame);
       const real = this.lastNow === null ? 0 : Math.min((now - this.lastNow) / 1000, 0.25);
       this.lastNow = now;

@@ -146,6 +146,41 @@ html.js .hero h1 .zeile b { display: block; font-weight: inherit; transform: tra
 .knopf .pfeil { transition: transform .2s; }
 .knopf:hover .pfeil { transform: translateX(4px); }
 
+/* ---------- Ameisen im Hero (js/ameisen.js, lädt erst beim Klick) ---------- */
+
+.ameisen-knopf {
+  display: none; align-self: center; cursor: pointer; background: none; border: 0; padding: 6px 4px;
+  font-family: var(--mono); font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+  text-decoration: underline dotted; text-underline-offset: 4px;
+}
+.ameisen-knopf:hover { color: #a8321a; }
+.ameisen-knopf[aria-busy] { cursor: progress; opacity: .6; }
+@media (min-width: 760px) { html.js .ameisen-knopf { display: inline-block; } }
+.ameisen-hinweis {
+  position: absolute; top: 18px; right: var(--rand); z-index: 6; width: min(310px, 44vw);
+  padding: 10px 14px; border-radius: 14px; border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 88%, transparent); box-shadow: var(--shadow);
+  font-size: .86rem; line-height: 1.4;
+}
+.ameisen-hinweis[hidden] { display: none; }
+.ameisen-hinweis a { color: #a8321a; font-weight: 600; text-decoration: none; }
+.ameisen-hinweis a:hover { text-decoration: underline; }
+.ameisen-leise, .ameisen-stand { color: var(--muted); font-size: .8rem; }
+.ameisen-stand { margin-top: 4px; font-variant-numeric: tabular-nums; }
+.ameisen-zurueck {
+  margin-top: 6px; cursor: pointer; font: 600 .78rem var(--sans); color: var(--fg); background: none;
+  border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px;
+}
+.ameisen-zurueck:hover { border-color: var(--fg); }
+.ameisen-abzeichen {
+  position: absolute; z-index: 4; border-radius: 50%; display: grid; place-items: center; text-align: center;
+  background: #a8321a; color: #fff; font-weight: 800; letter-spacing: -.03em; line-height: 1; font-size: 1.15rem;
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, .18); user-select: none; animation: ameisen-da .5s ease-out;
+}
+@keyframes ameisen-da { from { opacity: 0; } }
+.hero.ameisen-ziel { cursor: crosshair; }
+@media (prefers-color-scheme: dark) { .ameisen-leinwand { filter: invert(1) hue-rotate(180deg); } }
+
 /* ---------- Laufband ---------- */
 
 .laufband { border-block: 1px solid var(--line); background: var(--surface); overflow: hidden; padding: 14px 0; }
