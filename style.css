@@ -110,6 +110,8 @@ html.js .rein.da { opacity: 1; transform: none; }
 /* ---------- Hero Startseite ---------- */
 
 .hero { position: relative; min-height: min(92svh, 900px); display: flex; align-items: flex-end; padding: 120px 0 clamp(40px, 8vh, 90px); isolation: isolate; }
+/* Der Lichtfleck (::before, 60vmax) darf die Seite nicht verbreitern; nur waagrecht abschneiden, senkrecht wie bisher */
+.hero { overflow-x: clip; }
 .hero canvas.netz {
   position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1;
   -webkit-mask-image: radial-gradient(ellipse 62% 85% at 80% 40%, #000 20%, transparent 76%);
