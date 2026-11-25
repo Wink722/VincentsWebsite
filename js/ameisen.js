@@ -12,7 +12,7 @@ import { CarryMode, FREE_RING, loadPolicy } from "../projekte/ant-movers/sim/car
 const SIM = new URL("../projekte/ant-movers/sim/", import.meta.url);
 
 /** Maßstab und Ameisenzahl (Journal Ant Movers, M5 Teil 8). */
-export const VORGABE = { bl: 10, durchmesser: 120, jePlatz: 12, faktor: 4, maxAnts: 500 };
+export const VORGABE = { bl: 10, durchmesser: 150, jePlatz: 16, faktor: 4, maxAnts: 800 };
 
 let geladen = null; // Policy (Gewichte Seed 0), einmal je Seitenaufruf
 
