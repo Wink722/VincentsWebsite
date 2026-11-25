@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="de" data-lang="de"
+      data-titel-de="Ant Movers – Vincent Petsch"
+      data-titel-en="Ant Movers – Vincent Petsch">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ant Movers – Vincent Petsch</title>
+  <meta name="description" content="Ant Movers: Hunderte einfache, lokal wahrnehmende Agenten lernen per Reinforcement Learning, eine T-förmige Last durch zwei Schlitze zu tragen, verglichen mit einer Regel aus Ameisenexperimenten.">
+  <link rel="stylesheet" href="../../style.css">
+  <script src="../../js/lang.js"></script>
+  <style>
+    /* Live-Demo (sim/embed.js): heller Labortisch, unabhängig vom Farbschema der Seite */
+    .ant-live { position: relative; background: #ece4d5; color: #1f1b16; }
+    .ant-live canvas { display: block; width: 100%; aspect-ratio: 4 / 3; max-height: 78svh; touch-action: manipulation; }
+    .ant-hud { position: absolute; top: 12px; padding: 7px 11px; border-radius: 10px; background: rgba(246, 242, 234, .9);
+               font-size: .82rem; line-height: 1.35; font-variant-numeric: tabular-nums; pointer-events: none; }
+    .ant-hud small { display: block; color: #6b6257; font-size: .78rem; }
+    .ant-hud b { font-size: .95rem; }
+    .ant-links { left: 12px; } .ant-rechts { right: 12px; text-align: right; }
+    .ant-warn { color: #a8321a !important; font-weight: 600; }
+    .ant-leiste { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px; background: #f6f2ea; border-top: 1px solid #d9d1c2; }
+    .ant-leiste button { font: inherit; font-size: .82rem; padding: 5px 11px; border-radius: 999px; border: 1px solid #d9d1c2;
+                         background: #fff; color: #1f1b16; cursor: pointer; }
+    .ant-leiste button.an { background: #1f1b16; color: #fff; border-color: #1f1b16; }
+    .ant-gruppe { display: flex; flex-wrap: wrap; gap: 4px; margin-right: 8px; }
+    @media (max-width: 600px) { .ant-rechts { display: none; } }
+    /* Tabellen */
+    .tabelle { overflow-x: auto; margin-top: 14px; }
+    .tabelle table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: .95rem; }
+    .tabelle th, .tabelle td { text-align: right; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    .tabelle th:first-child, .tabelle td:first-child { text-align: left; white-space: normal; }
+    .tabelle th { color: var(--muted); font-weight: 600; font-size: .85rem; }
+    .zitat { border-left: 4px solid var(--akzent); padding: 6px 0 6px 18px; margin: 18px 0; font-size: 1.12rem; max-width: 46em; }
+    .fliess { max-width: 46em; color: var(--fg); }
+    .fliess p, .fliess li { margin: 0 0 10px; }
+    .fliess ul { padding-left: 1.2em; }
+    .fliess .leise, .leise { color: var(--muted); font-size: .92rem; }
+    .marke { display: inline-block; font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase;
+             color: var(--akzent); border: 1px solid var(--akzent); border-radius: 999px; padding: 2px 10px; }
+    /* Tragemodus auf Beispielkarten (sim/carrymode.js) */
+    .wiese { position: relative; height: 560px; border-radius: 22px; border: 1px solid var(--line); background: #fbf8f2;
+             overflow: hidden; user-select: none; color: #1f1b16; }
+    .wiese > [data-carry] { position: absolute; }
+    .wiese .w-karte { width: 200px; height: 128px; padding: 12px 14px; border-radius: 10px; background: #fff; border: 1px solid #d9d1c2; }
+    .wiese .w-karte h3 { margin: 0 0 4px; font-size: 1rem; }
+    .wiese .w-karte p { margin: 0; font-size: .8rem; color: #6b6257; line-height: 1.35; }
+    .wiese .w-knopf { width: 150px; height: 46px; border-radius: 999px; background: #1f1b16; color: #fff; display: flex;
+                      align-items: center; justify-content: center; font-weight: 600; font-size: .9rem; }
+    .wiese .w-rund { width: 92px; height: 92px; border-radius: 50%; background: #e9dcc6; border: 1px solid #cdbb9b; display: flex;
+                     align-items: center; justify-content: center; font-weight: 600; font-size: .8rem; text-align: center; }
+    .wiese.carry-picking [data-carry] { cursor: pointer; outline: 2px dashed rgba(168, 50, 26, .45); outline-offset: 3px; }
+    .wiese.carry-picking [data-carry]:hover { outline-color: #a8321a; }
+    .wiese [data-carry].carry-load { outline: 2px solid #a8321a; outline-offset: 3px; }
+    .wiese.ziel { cursor: crosshair; }
+    .wiese-leiste { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 12px 0; }
+    .wiese-leiste .knopf { padding: 8px 16px; font-size: .88rem; }
+    #wiese-stand { color: var(--muted); font-size: .9rem; font-variant-numeric: tabular-nums; }
+    .wiese .w1 { left: 5%; top: 50px; } .wiese .w2 { left: 68%; top: 50px; } .wiese .w3 { left: 68%; top: 380px; }
+    .wiese .w4 { left: 6%; top: 450px; } .wiese .w5 { left: 42%; top: 52px; }
+    @media (max-width: 720px) {
+      .wiese { height: 640px; } .wiese .w-karte { width: 170px; height: 116px; }
+      .wiese .w1 { left: 5%; top: 40px; } .wiese .w5 { left: auto; right: 6%; top: 52px; }
+      .wiese .w2 { left: 5%; top: 480px; } .wiese .w3 { display: none; } .wiese .w4 { left: auto; right: 6%; top: 520px; }
+    }
+  </style>
+</head>
+<body class="projekt" data-basis="../../" data-slug="ant-movers" style="--akzent:#a8321a">
+  <div class="fortschritt"></div>
+
+  <header class="kopf">
+    <div class="wrap">
+      <a class="logo" href="../../"><i></i>Vincent Petsch</a>
+      <nav>
+        <a href="../../#projekte"><span lang="de">← Alle Projekte</span><span lang="en">← All projects</span></a>
+      </nav>
+      <div class="sprache" role="group" aria-label="Sprache / Language">
+        <button type="button" data-setlang="de" aria-pressed="true">DE</button>
+        <button type="button" data-setlang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="p-hero">
+      <div class="wrap">
+        <span class="p-nr">05</span>
+        <h1>Ant Movers</h1>
+        <p class="slogan rein">
+          <span lang="de">Hunderte Ameisen, eine sperrige Last, und Schlitze, durch die sie <em>nur in der richtigen Lage</em> passt.</span>
+          <span lang="en">Hundreds of ants, one bulky load, and slits it only fits through <em>at the right angle.</em></span>
+        </p>
+        <div class="chips rein" style="--d:.1s"><span>Multi-Agent RL</span><span>PPO</span><span>JAX</span><span>WebGL</span><span><span lang="de">Ameisen</span><span lang="en">Ants</span></span></div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="buehne rein" id="live"></div>
+      <p class="unterzeile">
+        <span lang="de">Live im Browser: die gelernte Policy trägt das T durch zwei Schlitze ins Nest (brauner Ring). Rotbraun sind die Ameisen, die gerade greifen. Die Szenen sind die ersten vier Auswertungsszenarien, nicht nach Ausgang gewählt. Der Zeitfaktor steht oben links. Doppelklick zeigt die ganze Arena.</span>
+        <span lang="en">Live in your browser: the learned policy carries the T through two slits into the nest (brown ring). Ants shown in red-brown are gripping. The scenes are the first four evaluation scenarios, not picked by outcome. The time factor is shown top left. Double-click shows the whole arena.</span>
+      </p>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <p class="text-gross rein">
+          <span lang="de">Ameisen tragen gemeinsam Lasten, die viel größer sind als sie selbst, und finden dabei durch Engstellen, ohne dass eine Ameise den Plan kennt. Kann man das lernen lassen? Hier lernt jede Ameise per Reinforcement Learning, nur mit dem, was sie selbst spürt, und alle teilen sich ein kleines Netz. Trainiert wurde mit 10 bis 100 Ameisen, getragen wird mit bis zu 1000.</span>
+          <span lang="en">Ants carry loads far larger than themselves and find their way through narrow gaps, without any single ant knowing the plan. Can this be learned? Here every ant learns by reinforcement learning, using only what it senses itself, and all of them share one small network. Training used 10 to 100 ants; the carrying works with up to 1000.</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="abschnitt-kopf rein">
+        <h2><span lang="de">Die Aufgabe</span><span lang="en">The task</span></h2>
+      </div>
+      <div class="schritte">
+        <div class="schritt rein">
+          <h3><span lang="de">Ein T durch zwei Schlitze</span><span lang="en">A T through two slits</span></h3>
+          <p><span lang="de">Die T-förmige Last muss durch zwei Schlitze und drei Kammern ins Nest. Die Lücke lässt sie nur in passender Lage durch: Wer geradeaus zum Nest zieht, trifft die Wand neben dem Schlitz. Das Rätsel stammt aus Experimenten mit echten Ameisen (Dreyer et al. 2025).</span><span lang="en">The T-shaped load has to pass two slits and three chambers into the nest. The gap only lets it through at the right angle: pulling straight towards the nest hits the wall beside the slit. The puzzle comes from experiments with real ants (Dreyer et al. 2025).</span></p>
+        </div>
+        <div class="schritt rein" style="--d:.1s">
+          <h3><span lang="de">Nur lokale Sinne</span><span lang="en">Local senses only</span></h3>
+          <p><span lang="de">Jede Ameise sieht Wände, die Dichte anderer Ameisen und die Last nur in ihrer Nähe, dazu einen Kompass zum Nest, der nach einigen Sekunden verblasst. Keine Nachrichten. Wer greift, spürt, wie sich die Last an seinem Griffpunkt bewegt.</span><span lang="en">Each ant senses walls, the density of other ants and the load only nearby, plus a compass to the nest that fades after a few seconds. No messages. A gripping ant feels how the load moves at its grip point.</span></p>
+        </div>
+        <div class="schritt rein" style="--d:.2s">
+          <h3><span lang="de">Belohnt wird nur die Last</span><span lang="en">Only the load is rewarded</span></h3>
+          <p><span lang="de">Alle Ameisen bekommen dieselbe Belohnung: den Fortschritt der Last zum Nest. Gelernt wird mit PPO über 200 Mio. Umgebungsschritte, eine Policy für alle. Die Startpolicy hatte einen Bias aufs Greifen und auf Vorwärtsschub, sonst bewegt sich anfangs nichts.</span><span lang="en">All ants receive the same reward: the progress of the load towards the nest. Training uses PPO over 200 million environment steps, one policy for all. The initial policy had a bias towards gripping and pushing forward; otherwise nothing moves at the start.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <div class="abschnitt-kopf rein">
+          <h2><span lang="de">Ergebnis</span><span lang="en">Result</span></h2>
+        </div>
+        <p class="zitat rein">
+          <span lang="de">Die gelernte Policy löst 75,5 % der 256 ungesehenen Szenarien, die Ameisenregel 60,5 %. Vorab verlangt waren mindestens 15 Prozentpunkte Abstand bei getrennten Konfidenzintervallen. Die Intervalle sind getrennt, der Abstand ist mit 14,97 Punkten um 0,03 Punkte zu klein: <b>Kriterium K2a ist verfehlt.</b></span>
+          <span lang="en">The learned policy solves 75.5% of the 256 unseen scenarios, the ant rule 60.5%. We fixed in advance a margin of at least 15 percentage points with non-overlapping confidence intervals. The intervals do not overlap, but at 14.97 points the margin is 0.03 points short: <b>criterion K2a is not met.</b></span>
+        </p>
+        <div class="fliess rein">
+          <p class="leise"><span lang="de">Die Ameisenregel ist eine Handregel, abgeleitet aus Experimenten mit Ameisen (Gelblum et al. 2015, 2016; McCreery et al.). Gemessen auf 256 ungesehenen Szenarien mit 100 Ameisen, drei Trainingsläufe, Kriterien und Protokoll vor dem Training festgelegt. Ein zweiter Ansatz (ein Critic je Ameise) brach ein und wurde abgebrochen.</span><span lang="en">The ant rule is a hand-written rule derived from experiments with ants (Gelblum et al. 2015, 2016; McCreery et al.). Measured on 256 unseen scenarios with 100 ants, three training runs, criteria and protocol fixed before training. A second approach (one critic per ant) collapsed and was stopped.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="zahlen">
+        <div class="kachel rein">
+          <div class="wert"><span class="zahl" data-wert="1000" data-dez="0">1000</span><small><span lang="de">Ameisen</span><span lang="en">ants</span></small></div>
+          <p><span lang="de">trainiert mit höchstens 100. Bei 1000 Ameisen gelöst: 65,1 %, die Ameisenregel 36,7 %</span><span lang="en">trained with at most 100. Solved with 1000 ants: 65.1%, the ant rule 36.7%</span></p>
+        </div>
+        <div class="kachel rein" style="--d:.1s">
+          <div class="wert"><span class="zahl" data-wert="31.0" data-dez="1">31,0</span><small><span lang="de">Punkte</span><span lang="en">points</span></small></div>
+          <p><span lang="de">über „alle ziehen zum Nest“ (75,5 gegen 44,5 %): Kriterium K2b bestanden</span><span lang="en">above “everyone pulls to the nest” (75.5 vs 44.5%): criterion K2b met</span></p>
+        </div>
+        <div class="kachel rein" style="--d:.2s">
+          <div class="wert"><span class="zahl" data-wert="88.3" data-dez="1">88,3</span><small>%</small></div>
+          <p><span lang="de">der Leistung von 100 Ameisen erreichen 500 (verlangt 80 %): Kriterium K3 bestanden</span><span lang="en">of the success with 100 ants is kept with 500 (required: 80%): criterion K3 met</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <div class="abschnitt-kopf rein">
+          <h2><span lang="de">Mehr Ameisen</span><span lang="en">More ants</span></h2>
+        </div>
+        <div class="tabelle rein">
+          <table>
+            <thead><tr>
+              <th><span lang="de">Ameisen</span><span lang="en">Ants</span></th><th>20</th><th>50</th><th>100</th><th>200</th><th>500</th><th>1000</th>
+            </tr></thead>
+            <tbody>
+              <tr><td><span lang="de">gelernt</span><span lang="en">learned</span></td><td>69,0 %</td><td>76,7 %</td><td>75,5 %</td><td>72,4 %</td><td>66,7 %</td><td>65,1 %</td></tr>
+              <tr><td><span lang="de">Ameisenregel</span><span lang="en">ant rule</span></td><td>48,8 %</td><td>61,7 %</td><td>60,5 %</td><td>48,4 %</td><td>43,4 %</td><td>36,7 %</td></tr>
+              <tr><td><span lang="de">alle ziehen zum Nest</span><span lang="en">everyone pulls</span></td><td>41,8 %</td><td>46,5 %</td><td>44,5 %</td><td>35,5 %</td><td>29,7 %</td><td>25,4 %</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="fliess rein" style="margin-top:14px">
+          <p class="leise"><span lang="de">Gelöste Szenarien der Stufe 3, je 256 ungesehene Szenarien, gelernt als Mittel über drei Trainingsläufe. Trainiert wurde mit 10 bis 100 Ameisen. Nachträglich und kleiner gemessen, kein Kriterium: 2000 Ameisen, nur Trainingslauf 0, 64 Szenarien: 67,2 % gegen 26,6 % für die Ameisenregel (auf denselben 64 Szenarien mit 1000 Ameisen 73,4 und 32,8 %).</span><span lang="en">Solved scenarios of stage 3, 256 unseen scenarios each, learned as the mean over three training runs. Training used 10 to 100 ants. Measured afterwards and on a smaller sample, not a criterion: 2000 ants, training run 0 only, 64 scenarios: 67.2% versus 26.6% for the ant rule (on the same 64 scenarios with 1000 ants 73.4 and 32.8%).</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="buehne rein">
+        <video data-auto muted loop playsinline controls preload="none" poster="media/vergleich.webp" width="1020" height="362">
+          <source src="media/vergleich.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p class="unterzeile">
+        <span lang="de">Aufzeichnungen aus JAX, Zeitfaktor 10, je 100 Ameisen: gelernt (Trainingslauf 0), Ameisenregel und „alle ziehen“ auf den vier vorab festgelegten Szenarien, nicht ausgewählt. Gestrichelt die Startlage. Eine Aufzeichnung zieht ihren eigenen Zufall, sie ist ein Beispiel, keine Auswertung.</span>
+        <span lang="en">Recordings from JAX, time factor 10, 100 ants each: learned (training run 0), ant rule and “everyone pulls” on the four scenarios fixed in advance, not cherry-picked. Dashed: the starting pose. A recording draws its own randomness; it is an example, not an evaluation.</span>
+      </p>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <div class="abschnitt-kopf rein">
+          <h2><span lang="de">Was wirkt, und was wie bei Ameisen ist</span><span lang="en">What matters, and what looks like ants</span></h2>
+        </div>
+        <div class="tabelle rein">
+          <table>
+            <thead><tr><th><span lang="de">Ablation (je drei Trainingsläufe, 100 Ameisen)</span><span lang="en">Ablation (three training runs each, 100 ants)</span></th><th><span lang="de">gelöst</span><span lang="en">solved</span></th><th><span lang="de">gegen Ansatz 1</span><span lang="en">vs. approach 1</span></th></tr></thead>
+            <tbody>
+              <tr><td><span lang="de">Ansatz 1 (Bezug)</span><span lang="en">Approach 1 (reference)</span></td><td>75,5 %</td><td></td></tr>
+              <tr><td><span lang="de">Ohne mechanischen Kanal (Bewegung der Last am Griffpunkt nie gesehen)</span><span lang="en">No mechanical channel (load motion at the grip point never sensed)</span></td><td>61,7 %</td><td>−13,8</td></tr>
+              <tr><td><span lang="de">Alle dauerhaft informiert (Kompass verblasst nicht)</span><span lang="en">Everyone permanently informed (compass never fades)</span></td><td>74,0 %</td><td><span lang="de">−1,6, nicht belegt</span><span lang="en">−1.6, not significant</span></td></tr>
+              <tr><td><span lang="de">Luftlinie statt Wegdistanz in der Belohnung</span><span lang="en">Straight-line distance instead of path distance in the reward</span></td><td>79,0 %</td><td><span lang="de">+3,5, nicht belegt</span><span lang="en">+3.5, not significant</span></td></tr>
+              <tr><td><span lang="de">Feste Zahl von 100 Ameisen im Training (zählt nicht für die Kriterien)</span><span lang="en">Fixed count of 100 ants in training (does not count for the criteria)</span></td><td>84,1 %</td><td>+8,6</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="fliess rein" style="margin-top:16px">
+          <ul>
+            <li><span lang="de"><b>Der mechanische Kanal trägt die Koordination.</b> Ohne ihn fällt die gelernte Policy auf das Niveau der Ameisenregel. Es ist derselbe Kanal, über den nach Gelblum et al. 2015 die Träger einer Last einander folgen.</span><span lang="en"><b>The mechanical channel carries the coordination.</b> Without it the learned policy drops to the level of the ant rule. It is the same channel through which, according to Gelblum et al. 2015, ants carrying a load follow each other.</span></li>
+            <li><span lang="de"><b>Feste Ameisenzahl im Training</b> war besser als die vorab gewählte Mischung von 10 bis 100. Sie zählt nicht, weil sie nicht der vorab festgelegte Ansatz ist. Der vorab gewählte Ansatz war also nicht die beste gemessene Konfiguration.</span><span lang="en"><b>A fixed ant count in training</b> did better than the pre-chosen mix of 10 to 100. It does not count because it is not the approach fixed in advance. So the pre-chosen approach was not the best configuration measured.</span></li>
+            <li><span lang="de"><b>Kurve über die Gruppengröße wie bei Ameisen:</b> langsamer mit wenigen und mit sehr vielen Trägern, auf dem T-Rätsel besser von 20 auf 50, darüber nicht, wie bei Dreyer et al. 2025.</span><span lang="en"><b>Group-size curve like in ants:</b> slower with few and with very many carriers; on the T puzzle better from 20 to 50 but not beyond, as in Dreyer et al. 2025.</span></li>
+            <li><span lang="de"><b>Gleiten an der Wand zum Schlitz, mit Umkehr</b>, der Mechanismus aus Dreyer et al. 2025, ist in den Aufzeichnungen zu sehen.</span><span lang="en"><b>Sliding along the wall to the slit, with reversals</b>, the mechanism described by Dreyer et al. 2025, shows up in the recordings.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <div class="abschnitt-kopf rein">
+          <h2><span lang="de">Was nicht funktioniert hat</span><span lang="en">What did not work</span></h2>
+        </div>
+        <div class="fliess rein">
+          <ul>
+            <li><span lang="de"><b>K2a verfehlt</b>, um 0,03 Punkte, nach zwei Ansätzen. Der zweite (ein Critic je Ameise) brach ein: Die Policy ließ los, nach einem Viertel des Trainings abgebrochen.</span><span lang="en"><b>K2a not met</b>, by 0.03 points, after two approaches. The second (one critic per ant) collapsed: the policy let go, and it was stopped after a quarter of the training.</span></li>
+            <li><span lang="de"><b>Kein Pendeln.</b> Echte Ameisen und die Ameisenregel wechseln vor einer zu schmalen Lücke oft die Richtung. Die gelernte Policy tut das selten und gleitet stattdessen weit quer.</span><span lang="en"><b>No oscillation.</b> Real ants and the ant rule often switch direction in front of a gap that is too narrow. The learned policy rarely does and slides far sideways instead.</span></li>
+            <li><span lang="de"><b>Ohne Zufall versagt sie im Großen.</b> Nimmt jede Ameise immer die wahrscheinlichste Aktion, löst die Policy bei 1000 Ameisen nur 27,2 % statt 65,1 %: Ohne gelegentliches Loslassen kreisen große Lasten.</span><span lang="en"><b>Without randomness it fails at scale.</b> If every ant always takes its most likely action, the policy solves only 27.2% instead of 65.1% with 1000 ants: without occasionally letting go, large loads go in circles.</span></li>
+            <li><span lang="de"><b>Pheromon und Gedächtnis bleiben ungenutzt.</b> Die Ameisen legen dauernd zufällig Pheromon ab und lesen keine Ortsinformation daraus: Vertauscht man die Werte zwischen den Ameisen, ändert sich nichts. Die Demo zeigt das Pheromon deshalb nicht als Spur.</span><span lang="en"><b>Pheromone and memory stay unused.</b> The ants deposit pheromone randomly all the time and read no positional information from it: swapping the values between ants changes nothing. The demo therefore does not show the pheromone as a trail.</span></li>
+            <li><span lang="de"><b>12 % der Szenarien löst keiner</b>, weder die gelernte Policy in einem ihrer drei Trainingsläufe noch eine der beiden Regeln.</span><span lang="en"><b>No one solves 12% of the scenarios</b>, neither the learned policy in any of its three training runs nor either of the two rules.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="abschnitt-kopf rein">
+        <h2><span lang="de">Spielwiese: die Ameisen tragen diese Seite</span><span lang="en">Playground: the ants carry this page</span></h2>
+      </div>
+      <p class="fliess rein"><span class="marke"><span lang="de">außerhalb der Auswertung</span><span lang="en">outside the evaluation</span></span>
+        <span lang="de">Die gemessenen Zahlen gelten für das T-Rätsel. Hier tragen dieselben Ameisen ein Element: „Element wählen“, eine Karte anklicken, dann eine freie Stelle als Ziel. Die anderen Elemente und der Rand sind Wände, ein neuer Klick auf freie Fläche versetzt das Ziel.</span>
+        <span lang="en">The measured numbers apply to the T puzzle. Here the same ants carry an element: “Pick element”, click a card, then a free spot as the goal. The other elements and the border are walls; another click on free space moves the goal.</span></p>
+      <div class="wiese-leiste">
+        <button type="button" class="knopf" id="wiese-waehlen"><span lang="de">Element wählen</span><span lang="en">Pick element</span></button>
+        <button type="button" class="knopf" id="wiese-zurueck"><span lang="de">Zurücksetzen</span><span lang="en">Reset</span></button>
+        <span id="wiese-stand"></span>
+      </div>
+      <div class="wiese rein" id="wiese">
+        <div class="w-karte w1" data-carry><h3><span lang="de">Eine Karte</span><span lang="en">A card</span></h3><p><span lang="de">Der Text bleibt lesbar, während die Ameisen tragen.</span><span lang="en">The text stays readable while the ants carry it.</span></p></div>
+        <div class="w-karte w2" data-carry><h3><span lang="de">Noch eine</span><span lang="en">Another one</span></h3><p><span lang="de">Links bleiben klickbar: <a href="#live">zur Live-Demo</a>.</span><span lang="en">Links stay clickable: <a href="#live">to the live demo</a>.</span></p></div>
+        <div class="w-karte w3" data-carry><h3><span lang="de">Dritte Karte</span><span lang="en">Third card</span></h3><p><span lang="de">Ihr Rahmen ist eine Wand für die anderen.</span><span lang="en">Its outline is a wall for the others.</span></p></div>
+        <div class="w-knopf w4" data-carry><span lang="de">Ein Knopf</span><span lang="en">A button</span></div>
+        <div class="w-rund w5" data-carry><span lang="de">rund</span><span lang="en">round</span></div>
+      </div>
+      <p class="unterzeile">
+        <span lang="de">Ein Rechteck mit dem Seitenverhältnis des Elements, rund wird zur Scheibe. 12 Pixel je Körperlänge, 6 Ameisen je Griffplatz, Zeitfaktor 4. Nie trainiert: Rechtecke, Seitenlayouts als Wände, ein Ziel, das sich versetzen lässt. Vorab gemessen: im freien Feld jedes Mal am Ziel, zwischen dicht gesetzten Elementen nur ein Drittel bis die Hälfte. Deshalb liegen die Elemente am Rand, und wenig Platz ringsum heißt „klappt nicht immer“.</span>
+        <span lang="en">A rectangle with the element’s aspect ratio; round elements become a disc. 12 pixels per body length, 6 ants per grip slot, time factor 4. Never trained: rectangles, page layouts as walls, a goal that can be moved. Measured beforehand: in open space they always arrived, between densely packed elements only a third to a half of the time. That is why the elements sit at the edges, and little room around an element means “may not always work”.</span>
+      </p>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <div class="buehne rein">
+          <video data-auto muted loop playsinline controls preload="none" poster="media/gross.webp" width="840" height="426">
+            <source src="media/gross.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="unterzeile">
+          <span lang="de">1000 Ameisen, Zeitfaktor 30, Auswertungsszenario 3000, vorab festgelegt: gelernt (Trainingslauf 0) gegen die Ameisenregel. In dieser Aufzeichnung ist die gelernte Policy nach 179 s am Nest, die Ameisenregel nach 568 s. Ein Beispiel, keine Auswertung.</span>
+          <span lang="en">1000 ants, time factor 30, evaluation scenario 3000, fixed in advance: learned (training run 0) versus the ant rule. In this recording the learned policy reaches the nest after 179 s, the ant rule after 568 s. An example, not an evaluation.</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <div class="abschnitt-kopf rein">
+          <h2><span lang="de">Was gebaut und was gelernt ist</span><span lang="en">What is built and what is learned</span></h2>
+        </div>
+        <div class="fliess rein">
+          <ul>
+            <li><span lang="de"><b>Greifen ist eine Regel</b>, keine Kontaktphysik: Wer nah genug am Rand steht und greifen will, hängt an einem freien Platz. Die Haftschwelle wächst mit dem Umfang der Last und sinkt mit jeder greifenden Ameise, eine Auslegungsregel, keine Reibungsphysik.</span><span lang="en"><b>Gripping is a rule</b>, not contact physics: an ant close enough to the rim that wants to grip attaches to a free slot. The sticking threshold grows with the load’s perimeter and drops with every gripping ant, a design rule, not friction physics.</span></li>
+            <li><span lang="de"><b>Die Beine sind Animation.</b> Sie schwingen im Dreifußgang, ihre Schrittphase wächst mit der zurückgelegten Strecke. Gelernt sind nur Schub, Lenkung, Greifen und Ablage.</span><span lang="en"><b>The legs are animation.</b> They swing in a tripod gait whose phase advances with the distance walked. Only thrust, steering, gripping and deposit are learned.</span></li>
+            <li><span lang="de"><b>Dieselbe Physik und dieselbe Policy wie im Training</b>, aber nicht dieselben Bahnen: Physik und Netz existieren in JAX und in JavaScript. Ein Paritätstest prüft jeden Schritt über den ganzen Zustand, und auf den 256 Auswertungsszenarien löst JavaScript 77,0 % gegen 73,4 % in JAX (gepaarte Differenz +3,5 Punkte, verlangt innerhalb ± 10). Startzustand und Zufall zieht der Browser selbst. Die Ameisen zittern, weil sie ihre Aktionen wie im Training aus der gelernten Verteilung ziehen.</span><span lang="en"><b>The same physics and the same policy as in training</b>, but not the same trajectories: physics and network exist in JAX and in JavaScript. A parity test checks every step across the whole state, and on the 256 evaluation scenarios JavaScript solves 77.0% versus 73.4% in JAX (paired difference +3.5 points, required within ± 10). The browser draws its own start state and randomness. The ants jitter because they sample their actions from the learned distribution, as in training.</span></li>
+            <li><span lang="de"><b>Gezeigt wird Trainingslauf 0</b>, gewählt nach Regel (der erste), nicht nach Ergebnis. Er ist mit 73,4 % der schwächste der drei.</span><span lang="en"><b>Shown is training run 0</b>, chosen by rule (the first), not by result. At 73.4% it is the weakest of the three.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="abschnitt">
+      <div class="wrap">
+        <div class="abschnitt-kopf rein">
+          <h2><span lang="de">Was es schon gibt</span><span lang="en">Related work</span></h2>
+        </div>
+        <div class="fliess rein">
+          <p><span lang="de">Soweit unsere Recherche reicht (Stand November 2026), verbindet keine veröffentlichte Arbeit gelerntes Tragen mit Hunderten lokal wahrnehmender Agenten durch Engstellen und einen quantitativen Vergleich mit einer Regel aus Ameisenexperimenten. Keiner der Bausteine ist für sich neu.</span><span lang="en">As far as our search goes (November 2026), no published work combines learned carrying by hundreds of locally sensing agents through narrow passages with a quantitative comparison against a rule derived from ant experiments. None of the building blocks is new on its own.</span></p>
+          <p><span lang="de">Am nächsten ist <b>Heuthe, Panizon, Gu und Bechinger 2024</b> (Science Robotics): Multi-Agent RL mit bis zu 200 echten Mikrorobotern, die gemeinsam eine Last tragen. Die Unterschiede: echte Roboter dort, Simulation hier; freies Feld dort, Engstellen hier; eine kontrafaktische Belohnung je Roboter dort, eine Teambelohnung hier; dort kein Vergleich mit einer Regel aus Ameisendaten. Weitere nahe Arbeiten: Zhang et al. 2020 (zwei Roboter durch eine Tür), Bloom et al. 2023 (Koordination über die Last ohne Nachrichten), Alkilabi et al. 2017 (evolviert statt gelernt). Die Recherche las Zusammenfassungen, nicht alle Volltexte.</span><span lang="en">The closest work is <b>Heuthe, Panizon, Gu and Bechinger 2024</b> (Science Robotics): multi-agent RL with up to 200 real microrobots carrying a load together. The differences: real robots there, simulation here; open space there, narrow passages here; a counterfactual reward per robot there, a team reward here; no comparison with a rule from ant data there. Other close work: Zhang et al. 2020 (two robots through a door), Bloom et al. 2023 (coordination through the load without messages), Alkilabi et al. 2017 (evolved rather than learned). The search read abstracts, not all full texts.</span></p>
+          <p class="leise"><span lang="de">Code dieser Seite: Physik, Netz, Renderer und Tragemodus in reinem JavaScript ohne Build-Schritt, kopiert aus dem Projekt Ant Movers (Commit 9fe6741, Paritätstest grün), Gewichte von Trainingslauf 0 (Prüfsumme dfe03e989911b41a). Ab 1000 Ameisen rechnet das Netz in Web Workern, darüber gilt Zeitfaktor 2.</span><span lang="en">Code on this page: physics, network, renderer and carry mode in plain JavaScript with no build step, copied from the Ant Movers project (commit 9fe6741, parity test green), weights of training run 0 (checksum dfe03e989911b41a). From 1000 ants on, the network runs in web workers; above that the time factor is 2.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <a class="weiter" id="weiter" href="../../"></a>
+  </main>
+
+  <footer class="fuss">
+    <div class="wrap">
+      <span>© 2026 Vincent Petsch</span>
+      <a class="mono" href="../../">vincent-petsch.de</a>
+    </div>
+  </footer>
+
+  <script src="../projekte.js"></script>
+  <script src="../../js/netz.js"></script>
+  <script src="../../js/site.js"></script>
+  <script type="module">
+    import { startLive } from "./sim/embed.js";
+    import { CarryMode, loadPolicy } from "./sim/carrymode.js";
+    startLive(document.getElementById("live"), {
+      policy: "sim/policies/m4a_s0.json", scenes: ["sim/scenes/stage3_demo.json", "sim/scenes/stage3_big.json"],
+    });
+    const wiese = document.getElementById("wiese"), stand = document.getElementById("wiese-stand");
+    const t2 = (de, en) => `<span lang="de">${de}</span><span lang="en">${en}</span>`;
+    const { policy } = await loadPolicy("sim/policies/m4a_s0.json");
+    const cm = new CarryMode(wiese, policy, { onStatus: (s) => {
+      wiese.classList.toggle("ziel", ["target", "run", "done"].includes(s.phase));
+      let t = { idle: t2("„Element wählen“ drücken.", "Press “Pick element”."), pick: t2("Ein Element anklicken.", "Click an element."),
+        target: t2("Jetzt eine freie Stelle als Ziel anklicken.", "Now click a free spot as the goal."), run: "", done: "" }[s.phase];
+      if (s.nAnts) t += " " + t2(`${s.nAnts} Ameisen, Zeitfaktor ${s.factor}×.`, `${s.nAnts} ants, time factor ${s.factor}×.`);
+      if (s.t !== undefined) t += " " + t2(`Ameisenzeit ${Math.round(s.t)} s, ${s.grip} greifen.`, `Ant time ${Math.round(s.t)} s, ${s.grip} gripping.`);
+      if (s.outcome) t += " " + (s.outcome.kind === "nest" ? t2(`Am Ziel nach ${Math.round(s.outcome.t)} s.`, `At the goal after ${Math.round(s.outcome.t)} s.`)
+        : t2("Zeit abgelaufen.", "Time is up."));
+      if (s.warn) t += " " + t2("Klappt nicht immer (wenig Platz ringsum).", "May not always work (little room around it).");
+      if (s.msg) t += " " + (s.msg.startsWith("nicht wählbar") ? t2("Dieses Element ist zu groß oder zu schmal.", "This element is too large or too narrow.")
+        : t2("Ziel zu nah an einem Element oder am Rand.", "Goal too close to an element or the border."));
+      stand.innerHTML = t;
+    } });
+    document.getElementById("wiese-waehlen").onclick = () => cm.pick();
+    document.getElementById("wiese-zurueck").onclick = () => cm.reset();
+    cm.reset();
+  </script>
+</body>
+</html>

@@ -65,5 +65,20 @@ window.PROJEKTE = [
     },
     tags: ['Transformer', 'Navigation', 'PPO'],
     vorschau: { video: 'media/vorschau.mp4', poster: 'media/episoden.webp' }
+  },
+  {
+    slug: 'ant-movers',
+    titel: 'Ant Movers',
+    farbe: '#a8321a',
+    slogan: {
+      de: 'Hunderte Ameisen, eine sperrige Last, und Schlitze, durch die sie nur in der richtigen Lage passt.',
+      en: 'Hundreds of ants, one bulky load, and slits it only fits through at the right angle.'
+    },
+    zahl: {
+      wert: { de: '1000 Ameisen', en: '1000 ants' },
+      text: { de: 'trainiert mit höchstens 100', en: 'trained with at most 100' }
+    },
+    tags: ['Multi-Agent RL', 'PPO', 'JAX'],
+    vorschau: { video: 'media/vorschau.mp4', poster: 'media/vorschau.webp' }
   }
 ];

@@ -1,0 +1,5 @@
+Herkunft: Kopie aus dem Projekt Ant Movers (Repo ohne Remote), Commit 9fe6741.
+sim.js, policy.js, render.js, frame.js, policypool.js, policy_worker.js, carry.js, carrymode.js, embed.js
+und policies/m4a_s0.json (Ansatz 1, Trainingsseed 0, Pruefsumme dfe03e989911b41a), scenes/*.json
+(Stufe 3, Auswertungsseeds 3000 bis 3003). Paritaetstest JAX gegen JavaScript gruen (143 Tests,
+an e39837c; sim.js und policy.js seitdem unveraendert). Nicht von Hand aendern, sondern neu kopieren.
