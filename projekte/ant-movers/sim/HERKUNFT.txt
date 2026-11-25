@@ -1,7 +1,8 @@
-Herkunft: Kopie aus dem Projekt Ant Movers (Repo ohne Remote), Commit 2f0107f
-(carrymode.js neu gezogen fuer das Gimmick der Startseite: select, Textwaende, Pause; alle
-anderen Dateien unveraendert seit 9fe6741).
-sim.js, policy.js, render.js, frame.js, policypool.js, policy_worker.js, carry.js, carrymode.js, embed.js
+Herkunft: Kopie aus dem Projekt Ant Movers (Repo ohne Remote), Commit b10ae89
+(umbau.js und umbau_core.js neu fuer "Umbau mit Ameisen" auf der Startseite; carrymode.js aus
+2f0107f; alle anderen Dateien unveraendert seit 9fe6741).
+sim.js, policy.js, render.js, frame.js, policypool.js, policy_worker.js, carry.js, carrymode.js, embed.js,
+umbau.js, umbau_core.js
 und policies/m4a_s0.json (Ansatz 1, Trainingsseed 0, Pruefsumme dfe03e989911b41a, der Darsteller),
 m4a_s1.json (492348415d3eb044) und m4a_s2.json (a0d7d738ecf8d67e) (ADR 0022: alle drei veroeffentlicht), scenes/*.json
 (Stufe 3, Auswertungsseeds 3000 bis 3003). Paritaetstest JAX gegen JavaScript gruen (143 Tests,

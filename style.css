@@ -127,6 +127,7 @@ html.js .rein.da { opacity: 1; transform: none; }
   font-size: clamp(3.2rem, 11.5vw, 9.6rem); line-height: .88; letter-spacing: -.055em; font-weight: 800;
   margin: 18px 0 28px;
 }
+.hero h1 { width: fit-content; }
 .hero h1 span { display: block; }
 .hero h1 .zeile { overflow: hidden; padding-bottom: .08em; }
 html.js .hero h1 .zeile b { display: block; font-weight: inherit; transform: translateY(105%); animation: hoch .9s cubic-bezier(.2, .8, .2, 1) forwards; animation-delay: var(--d, .1s); }
@@ -148,39 +149,38 @@ html.js .hero h1 .zeile b { display: block; font-weight: inherit; transform: tra
 .knopf .pfeil { transition: transform .2s; }
 .knopf:hover .pfeil { transform: translateX(4px); }
 
-/* ---------- Ameisen im Hero (js/ameisen.js, lädt erst beim Klick) ---------- */
+/* ---------- Umbau mit Ameisen (js/ameisen.js, lädt erst beim Klick) ---------- */
 
 .ameisen-knopf {
   display: none; align-self: center; cursor: pointer; background: none; border: 0; padding: 6px 4px;
   font-family: var(--mono); font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
   text-decoration: underline dotted; text-underline-offset: 4px;
 }
-.ameisen-knopf:hover { color: #a8321a; }
+.ameisen-knopf:hover, .ameisen-knopf[aria-pressed="true"] { color: #a8321a; }
 .ameisen-knopf[aria-busy] { cursor: progress; opacity: .6; }
 @media (min-width: 760px) { html.js .ameisen-knopf { display: inline-block; } }
 .ameisen-hinweis {
-  position: absolute; top: 18px; right: var(--rand); z-index: 6; width: min(310px, 44vw);
+  position: fixed; bottom: 16px; right: 16px; z-index: 60; width: 290px;
   padding: 10px 14px; border-radius: 14px; border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--surface) 88%, transparent); box-shadow: var(--shadow);
+  background: color-mix(in srgb, var(--surface) 92%, transparent); box-shadow: var(--shadow);
   font-size: .86rem; line-height: 1.4;
 }
 .ameisen-hinweis[hidden] { display: none; }
 .ameisen-hinweis a { color: #a8321a; font-weight: 600; text-decoration: none; }
 .ameisen-hinweis a:hover { text-decoration: underline; }
 .ameisen-leise, .ameisen-stand { color: var(--muted); font-size: .8rem; }
-.ameisen-stand { margin-top: 4px; font-variant-numeric: tabular-nums; }
+.ameisen-stand { margin-top: 4px; font-variant-numeric: tabular-nums; min-height: 2.8em; }
+.ameisen-knoepfe { margin-top: 6px; display: flex; gap: 8px; }
 .ameisen-zurueck {
-  margin-top: 6px; cursor: pointer; font: 600 .78rem var(--sans); color: var(--fg); background: none;
+  cursor: pointer; font: 600 .78rem var(--sans); color: var(--fg); background: none;
   border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px;
 }
 .ameisen-zurueck:hover { border-color: var(--fg); }
-.ameisen-abzeichen {
-  position: absolute; z-index: 4; border-radius: 50%; display: grid; place-items: center; text-align: center;
-  background: #a8321a; color: #fff; font-weight: 800; letter-spacing: -.03em; line-height: 1; font-size: 1.15rem;
-  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, .18); user-select: none; animation: ameisen-da .5s ease-out;
-}
-@keyframes ameisen-da { from { opacity: 0; } }
-.hero.ameisen-ziel { cursor: crosshair; }
+html.umbau-an .umbau-wahl { outline: 2px dashed rgba(168, 50, 26, .45); outline-offset: 4px; cursor: pointer; }
+html.umbau-an .umbau-wahl:hover { outline-color: #a8321a; }
+html.umbau-an .umbau-gewaehlt { outline: 2px solid #a8321a; outline-offset: 4px; }
+html.umbau-ziel body { cursor: crosshair; }
+.umbau-zielfeld { border: 2px dashed #a8321a; border-radius: 8px; background: rgba(168, 50, 26, .05); }
 @media (prefers-color-scheme: dark) { .ameisen-leinwand { filter: invert(1) hue-rotate(180deg); } }
 
 /* ---------- Laufband ---------- */

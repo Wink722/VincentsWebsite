@@ -168,29 +168,37 @@
     });
   }
 
-  /* ---------- Ameisen im Hero (lädt erst beim Klick, js/ameisen.js) ---------- */
+  /* ---------- Umbau mit Ameisen (lädt erst beim Klick, js/ameisen.js) ---------- */
   var los = document.getElementById('ameisen-los');
   if (los) {
-    var gimmick = null, laedt = false;
+    var umbau = null, laedt = false;
     var ui = {
       hinweis: document.getElementById('ameisen-hinweis'),
-      stand: document.getElementById('ameisen-stand'),
-      zurueck: document.getElementById('ameisen-zurueck')
+      stand: document.getElementById('ameisen-stand')
     };
+    var zeige = function (an) { los.setAttribute('aria-pressed', String(an)); };
     los.addEventListener('click', function () {
       if (laedt) return;
-      if (gimmick) { gimmick.beenden(); gimmick = null; }
+      if (umbau && !umbau.beendet) {
+        if (ui.hinweis.hidden) umbau.an(); else umbau.aus();
+        zeige(!ui.hinweis.hidden);
+        return;
+      }
       laedt = true; los.setAttribute('aria-busy', 'true');
       import(new URL('js/ameisen.js', document.baseURI + basis).href).then(function (m) {
-        return m.start(document.querySelector('.hero'), ui);
+        return m.start(ui);
       }).then(function (g) {
-        gimmick = g; window.ameisen = g;
+        umbau = g; window.ameisen = g; zeige(true);
       }).catch(function (e) {
         console.warn('Ameisen:', e);
       }).then(function () { laedt = false; los.removeAttribute('aria-busy'); });
     });
-    ui.zurueck.addEventListener('click', function () {
-      if (gimmick) { gimmick.beenden(); gimmick = null; }
+    document.getElementById('ameisen-zurueck').addEventListener('click', function () {
+      if (umbau && !umbau.beendet) umbau.um.reset();
+    });
+    document.getElementById('ameisen-ende').addEventListener('click', function () {
+      if (umbau && !umbau.beendet) umbau.aus();
+      zeige(false);
       los.focus();
     });
   }

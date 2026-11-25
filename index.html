@@ -52,14 +52,8 @@
         <div class="aktionen rein" style="--d:.74s">
           <a class="knopf" href="#projekte"><span lang="de">Projekte ansehen</span><span lang="en">See the projects</span> <span class="pfeil">↓</span></a>
           <a class="knopf leer" href="#ueber"><span lang="de">Über mich</span><span lang="en">About me</span></a>
-          <button type="button" class="ameisen-knopf" id="ameisen-los" aria-controls="ameisen-hinweis"><span lang="de">Ameisen loslassen</span><span lang="en">Release the ants</span></button>
+          <button type="button" class="ameisen-knopf" id="ameisen-los" aria-controls="ameisen-hinweis" aria-pressed="false"><span lang="de">Umbau mit Ameisen</span><span lang="en">Rearrange with ants</span></button>
         </div>
-      </div>
-      <div class="ameisen-hinweis" id="ameisen-hinweis" role="status" hidden>
-        <p><span lang="de">Gelernte Ameisen aus <a href="projekte/ant-movers/">Ant Movers →</a></span><span lang="en">Learned ants from <a href="projekte/ant-movers/">Ant Movers →</a></span></p>
-        <p class="ameisen-leise"><span lang="de">Spielwiese außerhalb der Auswertung</span><span lang="en">Playground outside the evaluation</span></p>
-        <p class="ameisen-stand" id="ameisen-stand"></p>
-        <button type="button" class="ameisen-zurueck" id="ameisen-zurueck"><span lang="de">Zurücksetzen</span><span lang="en">Reset</span></button>
       </div>
     </section>
 
@@ -116,6 +110,14 @@
       <span class="mono">vincent-petsch.de</span>
     </div>
   </footer>
+
+  <div class="ameisen-hinweis" id="ameisen-hinweis" role="status" hidden>
+    <p><span lang="de">Gelernte Ameisen aus <a href="projekte/ant-movers/">Ant Movers →</a></span><span lang="en">Learned ants from <a href="projekte/ant-movers/">Ant Movers →</a></span></p>
+    <p class="ameisen-leise"><span lang="de">Spielwiese außerhalb der Auswertung. Gelernt ist das Tragen, Einrasten und Abzug sind Animation.</span><span lang="en">Playground outside the evaluation. The carrying is learned; snapping into place and leaving are animation.</span></p>
+    <p class="ameisen-stand" id="ameisen-stand"></p>
+    <p class="ameisen-knoepfe"><button type="button" class="ameisen-zurueck" id="ameisen-zurueck"><span lang="de">Zurücksetzen</span><span lang="en">Reset</span></button>
+      <button type="button" class="ameisen-zurueck" id="ameisen-ende"><span lang="de">Beenden</span><span lang="en">Done</span></button></p>
+  </div>
 
   <script src="projekte/projekte.js"></script>
   <script src="js/netz.js"></script>
