@@ -38,31 +38,6 @@
     .fliess .leise, .leise { color: var(--muted); font-size: .92rem; }
     .marke { display: inline-block; font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase;
              color: var(--akzent); border: 1px solid var(--akzent); border-radius: 999px; padding: 2px 10px; }
-    /* Tragemodus auf Beispielkarten (sim/carrymode.js) */
-    .wiese { position: relative; height: 560px; border-radius: 22px; border: 1px solid var(--line); background: #fbf8f2;
-             overflow: hidden; user-select: none; color: #1f1b16; }
-    .wiese > [data-carry] { position: absolute; }
-    .wiese .w-karte { width: 200px; height: 128px; padding: 12px 14px; border-radius: 10px; background: #fff; border: 1px solid #d9d1c2; }
-    .wiese .w-karte h3 { margin: 0 0 4px; font-size: 1rem; }
-    .wiese .w-karte p { margin: 0; font-size: .8rem; color: #6b6257; line-height: 1.35; }
-    .wiese .w-knopf { width: 150px; height: 46px; border-radius: 999px; background: #1f1b16; color: #fff; display: flex;
-                      align-items: center; justify-content: center; font-weight: 600; font-size: .9rem; }
-    .wiese .w-rund { width: 92px; height: 92px; border-radius: 50%; background: #e9dcc6; border: 1px solid #cdbb9b; display: flex;
-                     align-items: center; justify-content: center; font-weight: 600; font-size: .8rem; text-align: center; }
-    .wiese.carry-picking [data-carry] { cursor: pointer; outline: 2px dashed rgba(168, 50, 26, .45); outline-offset: 3px; }
-    .wiese.carry-picking [data-carry]:hover { outline-color: #a8321a; }
-    .wiese [data-carry].carry-load { outline: 2px solid #a8321a; outline-offset: 3px; }
-    .wiese.ziel { cursor: crosshair; }
-    .wiese-leiste { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 12px 0; }
-    .wiese-leiste .knopf { padding: 8px 16px; font-size: .88rem; }
-    #wiese-stand { color: var(--muted); font-size: .9rem; font-variant-numeric: tabular-nums; }
-    .wiese .w1 { left: 5%; top: 50px; } .wiese .w2 { left: 68%; top: 50px; } .wiese .w3 { left: 68%; top: 380px; }
-    .wiese .w4 { left: 6%; top: 450px; } .wiese .w5 { left: 42%; top: 52px; }
-    @media (max-width: 720px) {
-      .wiese { height: 640px; } .wiese .w-karte { width: 170px; height: 116px; }
-      .wiese .w1 { left: 5%; top: 40px; } .wiese .w5 { left: auto; right: 6%; top: 52px; }
-      .wiese .w2 { left: 5%; top: 480px; } .wiese .w3 { display: none; } .wiese .w4 { left: auto; right: 6%; top: 520px; }
-    }
   </style>
 </head>
 <body class="projekt" data-basis="../../" data-slug="ant-movers" style="--akzent:#a8321a">
@@ -245,27 +220,21 @@
 
     <section class="wrap">
       <div class="abschnitt-kopf rein">
-        <h2><span lang="de">Spielwiese: die Ameisen tragen diese Seite</span><span lang="en">Playground: the ants carry this page</span></h2>
+        <h2><span lang="de">Umbau mit Ameisen</span><span lang="en">Rearrange with ants</span></h2>
       </div>
-      <p class="fliess rein"><span class="marke"><span lang="de">außerhalb der Auswertung</span><span lang="en">outside the evaluation</span></span>
-        <span lang="de">Die gemessenen Zahlen gelten für das T-Rätsel. Hier tragen dieselben Ameisen ein Element: „Element wählen“, eine Karte anklicken, dann eine freie Stelle als Ziel. Die anderen Elemente und der Rand sind Wände, ein neuer Klick auf freie Fläche versetzt das Ziel.</span>
-        <span lang="en">The measured numbers apply to the T puzzle. Here the same ants carry an element: “Pick element”, click a card, then a free spot as the goal. The other elements and the border are walls; another click on free space moves the goal.</span></p>
-      <div class="wiese-leiste">
-        <button type="button" class="knopf" id="wiese-waehlen"><span lang="de">Element wählen</span><span lang="en">Pick element</span></button>
-        <button type="button" class="knopf" id="wiese-zurueck"><span lang="de">Zurücksetzen</span><span lang="en">Reset</span></button>
-        <span id="wiese-stand"></span>
+      <div class="fliess rein">
+        <p><span class="marke"><span lang="de">außerhalb der Auswertung</span><span lang="en">outside the evaluation</span></span>
+          <span lang="de">Auf der <a href="../../">Startseite</a> trägt „Umbau mit Ameisen“ Teile der Seite an eine andere Stelle, etwa die Überschrift „Vincent Petsch“: Ein Klick wählt das Element, ein zweiter das Ziel. Die Zahlen oben gelten für das T-Rätsel. Solche Szenen gab es im Training nie: Seitenlayouts als Wände, Rechtecke statt T, Ameisen, die vom Rand kommen.</span>
+          <span lang="en">On the <a href="../../">home page</a>, “Rearrange with ants” carries parts of the page to another spot, for example the heading “Vincent Petsch”: one click picks the element, a second one the goal. The numbers above apply to the T puzzle. Training never saw scenes like these: page layouts as walls, rectangles instead of a T, ants coming in from the edge.</span></p>
+        <ul>
+          <li><span lang="de"><b>Gelernt ist das Tragen:</b> dieselbe Physik und dieselbe Policy wie im Training (Trainingslauf 0, gezogen).</span><span lang="en"><b>The carrying is learned:</b> the same physics and the same policy as in training (training run 0, sampled).</span></li>
+          <li><span lang="de"><b>Der Anmarsch ist ebenfalls die Policy, mit gesetztem Ziel.</b> Die Ameisen kommen vom linken und rechten Rand. Damit sie das Element finden, liegt das Ziel ihres Kompasses vorübergehend auf dem Element; sobald ein Viertel der Griffplätze besetzt ist, springt es auf das Ziel. Gesetzt ist nur dieser Ort, nicht das Verhalten.</span><span lang="en"><b>The approach is the policy as well, with a set goal.</b> The ants come in from the left and right edges. So that they find the element, the goal of their compass sits on the element for a while; once a quarter of the grip slots are taken, it jumps to the goal. Only that location is set, not the behaviour.</span></li>
+          <li><span lang="de"><b>Das Einrasten ist Animation.</b> Angekommen sind die Ameisen, wenn die Mitte des Elements 4 Körperlängen vom Ziel entfernt ist. Das letzte Stück, höchstens 40 Pixel, gleitet das Element allein und dreht sich dabei gerade.</span><span lang="en"><b>Snapping into place is animation.</b> The ants count as arrived when the element’s centre is within 4 body lengths of the goal. The last bit, at most 40 pixels, the element glides on its own and straightens up.</span></li>
+          <li><span lang="de"><b>Der Abzug ist geskriptet:</b> Eine feste Regel lenkt die Ameisen zur nächsten Kante.</span><span lang="en"><b>Leaving is scripted:</b> a fixed rule steers the ants to the nearest edge.</span></li>
+          <li><span lang="de"><b>Angeboten wird nur, was trägt.</b> Die Policy plant keinen Umweg, ein Element braucht deshalb ein Ziel mit Platz und freier gerader Bahn. Vorab gemessen, je 64 Durchläufe mit zufälligen erlaubten Zielen: Überschrift 64 von 64, Abschnittsüberschrift 64 von 64, Profiltext 61 von 64, Faktenkästen 62 und 64 von 64, zusammen 315 von 320. Die Knöpfe der Knopfzeile kamen ohne diese Bedingung nur 4 und 2 von 64 Mal an und werden nicht angeboten, die Absätze sind zu schmal.</span><span lang="en"><b>Only what carries is offered.</b> The policy does not plan detours, so an element needs a goal with room and a free straight path. Measured beforehand, 64 runs each with random allowed goals: heading 64 of 64, section heading 64 of 64, profile text 61 of 64, fact boxes 62 and 64 of 64, together 315 of 320. Without that condition the buttons in the button row arrived only 4 and 2 times out of 64 and are not offered; the paragraphs are too narrow.</span></li>
+        </ul>
+        <p class="leise"><span lang="de">10 Pixel je Körperlänge, 16 Ameisen je Griffplatz, höchstens 800, Zeitfaktor 4. Am Handy gibt es den Umbau nicht.</span><span lang="en">10 pixels per body length, 16 ants per grip slot, at most 800, time factor 4. There is no rearranging on phones.</span></p>
       </div>
-      <div class="wiese rein" id="wiese">
-        <div class="w-karte w1" data-carry><h3><span lang="de">Eine Karte</span><span lang="en">A card</span></h3><p><span lang="de">Der Text bleibt lesbar, während die Ameisen tragen.</span><span lang="en">The text stays readable while the ants carry it.</span></p></div>
-        <div class="w-karte w2" data-carry><h3><span lang="de">Noch eine</span><span lang="en">Another one</span></h3><p><span lang="de">Links bleiben klickbar: <a href="#live">zur Live-Demo</a>.</span><span lang="en">Links stay clickable: <a href="#live">to the live demo</a>.</span></p></div>
-        <div class="w-karte w3" data-carry><h3><span lang="de">Dritte Karte</span><span lang="en">Third card</span></h3><p><span lang="de">Ihr Rahmen ist eine Wand für die anderen.</span><span lang="en">Its outline is a wall for the others.</span></p></div>
-        <div class="w-knopf w4" data-carry><span lang="de">Ein Knopf</span><span lang="en">A button</span></div>
-        <div class="w-rund w5" data-carry><span lang="de">rund</span><span lang="en">round</span></div>
-      </div>
-      <p class="unterzeile">
-        <span lang="de">Ein Rechteck mit dem Seitenverhältnis des Elements, rund wird zur Scheibe. 12 Pixel je Körperlänge, 6 Ameisen je Griffplatz, Zeitfaktor 4. Nie trainiert: Rechtecke, Seitenlayouts als Wände, ein Ziel, das sich versetzen lässt. Vorab gemessen: im freien Feld jedes Mal am Ziel, zwischen dicht gesetzten Elementen nur ein Drittel bis die Hälfte. Deshalb liegen die Elemente am Rand, und wenig Platz ringsum heißt „klappt nicht immer“.</span>
-        <span lang="en">A rectangle with the element’s aspect ratio; round elements become a disc. 12 pixels per body length, 6 ants per grip slot, time factor 4. Never trained: rectangles, page layouts as walls, a goal that can be moved. Measured beforehand: in open space they always arrived, between densely packed elements only a third to a half of the time. That is why the elements sit at the edges, and little room around an element means “may not always work”.</span>
-      </p>
     </section>
 
     <section class="abschnitt">
@@ -306,7 +275,7 @@
         <div class="fliess rein">
           <p><span lang="de">Soweit unsere Recherche reicht (Stand November 2026), verbindet keine veröffentlichte Arbeit gelerntes Tragen mit Hunderten lokal wahrnehmender Agenten durch Engstellen und einen quantitativen Vergleich mit einer Regel aus Ameisenexperimenten. Keiner der Bausteine ist für sich neu.</span><span lang="en">As far as our search goes (November 2026), no published work combines learned carrying by hundreds of locally sensing agents through narrow passages with a quantitative comparison against a rule derived from ant experiments. None of the building blocks is new on its own.</span></p>
           <p><span lang="de">Am nächsten ist <b>Heuthe, Panizon, Gu und Bechinger 2024</b> (Science Robotics): Multi-Agent RL mit bis zu 200 echten Mikrorobotern, die gemeinsam eine Last tragen. Die Unterschiede: echte Roboter dort, Simulation hier; freies Feld dort, Engstellen hier; eine kontrafaktische Belohnung je Roboter dort, eine Teambelohnung hier; dort kein Vergleich mit einer Regel aus Ameisendaten. Weitere nahe Arbeiten: Zhang et al. 2020 (zwei Roboter durch eine Tür), Bloom et al. 2023 (Koordination über die Last ohne Nachrichten), Alkilabi et al. 2017 (evolviert statt gelernt). Die Recherche las Zusammenfassungen, nicht alle Volltexte.</span><span lang="en">The closest work is <b>Heuthe, Panizon, Gu and Bechinger 2024</b> (Science Robotics): multi-agent RL with up to 200 real microrobots carrying a load together. The differences: real robots there, simulation here; open space there, narrow passages here; a counterfactual reward per robot there, a team reward here; no comparison with a rule from ant data there. Other close work: Zhang et al. 2020 (two robots through a door), Bloom et al. 2023 (coordination through the load without messages), Alkilabi et al. 2017 (evolved rather than learned). The search read abstracts, not all full texts.</span></p>
-          <p class="leise"><span lang="de">Code dieser Seite: Physik, Netz, Renderer und Tragemodus in reinem JavaScript ohne Build-Schritt, kopiert aus dem Projekt Ant Movers (Commit 2f0107f, Paritätstest grün), Gewichte von Trainingslauf 0 (Prüfsumme dfe03e989911b41a). Ab 1000 Ameisen rechnet das Netz in Web Workern, darüber gilt Zeitfaktor 2.</span><span lang="en">Code on this page: physics, network, renderer and carry mode in plain JavaScript with no build step, copied from the Ant Movers project (commit 2f0107f, parity test green), weights of training run 0 (checksum dfe03e989911b41a). From 1000 ants on, the network runs in web workers; above that the time factor is 2.</span></p>
+          <p class="leise"><span lang="de">Code dieser Seite: Physik, Netz, Renderer und der Umbau der Startseite in reinem JavaScript ohne Build-Schritt, kopiert aus dem Projekt Ant Movers (Commit b10ae89, Paritätstest grün), Gewichte von Trainingslauf 0 (Prüfsumme dfe03e989911b41a). Ab 1000 Ameisen rechnet das Netz in Web Workern, darüber gilt Zeitfaktor 2.</span><span lang="en">Code on this page: physics, network, renderer and the home-page rearranging in plain JavaScript with no build step, copied from the Ant Movers project (commit b10ae89, parity test green), weights of training run 0 (checksum dfe03e989911b41a). From 1000 ants on, the network runs in web workers; above that the time factor is 2.</span></p>
         </div>
       </div>
     </section>
@@ -326,29 +295,9 @@
   <script src="../../js/site.js"></script>
   <script type="module">
     import { startLive } from "./sim/embed.js";
-    import { CarryMode, loadPolicy } from "./sim/carrymode.js";
     startLive(document.getElementById("live"), {
       policy: "sim/policies/m4a_s0.json", scenes: ["sim/scenes/stage3_demo.json", "sim/scenes/stage3_big.json"],
     });
-    const wiese = document.getElementById("wiese"), stand = document.getElementById("wiese-stand");
-    const t2 = (de, en) => `<span lang="de">${de}</span><span lang="en">${en}</span>`;
-    const { policy } = await loadPolicy("sim/policies/m4a_s0.json");
-    const cm = new CarryMode(wiese, policy, { onStatus: (s) => {
-      wiese.classList.toggle("ziel", ["target", "run", "done"].includes(s.phase));
-      let t = { idle: t2("„Element wählen“ drücken.", "Press “Pick element”."), pick: t2("Ein Element anklicken.", "Click an element."),
-        target: t2("Jetzt eine freie Stelle als Ziel anklicken.", "Now click a free spot as the goal."), run: "", done: "" }[s.phase];
-      if (s.nAnts) t += " " + t2(`${s.nAnts} Ameisen, Zeitfaktor ${s.factor}×.`, `${s.nAnts} ants, time factor ${s.factor}×.`);
-      if (s.t !== undefined) t += " " + t2(`Ameisenzeit ${Math.round(s.t)} s, ${s.grip} greifen.`, `Ant time ${Math.round(s.t)} s, ${s.grip} gripping.`);
-      if (s.outcome) t += " " + (s.outcome.kind === "nest" ? t2(`Am Ziel nach ${Math.round(s.outcome.t)} s.`, `At the goal after ${Math.round(s.outcome.t)} s.`)
-        : t2("Zeit abgelaufen.", "Time is up."));
-      if (s.warn) t += " " + t2("Klappt nicht immer (wenig Platz ringsum).", "May not always work (little room around it).");
-      if (s.msg) t += " " + (s.msg.startsWith("nicht wählbar") ? t2("Dieses Element ist zu groß oder zu schmal.", "This element is too large or too narrow.")
-        : t2("Ziel zu nah an einem Element oder am Rand.", "Goal too close to an element or the border."));
-      stand.innerHTML = t;
-    } });
-    document.getElementById("wiese-waehlen").onclick = () => cm.pick();
-    document.getElementById("wiese-zurueck").onclick = () => cm.reset();
-    cm.reset();
   </script>
 </body>
 </html>
