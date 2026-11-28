@@ -1,5 +1,6 @@
-Herkunft: Kopie aus dem Projekt Ant Movers (Repo ohne Remote), Commit b10ae89
-(umbau.js und umbau_core.js neu fuer "Umbau mit Ameisen" auf der Startseite; carrymode.js entfernt,
+Herkunft: Kopie aus dem Projekt Ant Movers (Repo ohne Remote), Commit 48f5ea0
+(umbau.js: Auswahl repariert nach Vincents Rueckmeldung, Website nach M6; umbau.js und umbau_core.js
+neu seit b10ae89 fuer "Umbau mit Ameisen" auf der Startseite; carrymode.js entfernt,
 seit die Spielwiese der Projektseite entfallen ist; alle anderen Dateien unveraendert seit 9fe6741).
 sim.js, policy.js, render.js, frame.js, policypool.js, policy_worker.js, carry.js, embed.js,
 umbau.js, umbau_core.js

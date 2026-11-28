@@ -3,11 +3,21 @@
 // Animation, Abzug geskriptet), hier nur die Seite: Elemente wählen, Ziel prüfen, Leinwand,
 // transform, Zurücksetzen.
 //
-// Im Umbaumodus wählt ein Klick auf ein angebotenes Element dieses aus (Knöpfe und Links lösen
-// dann nicht aus; nicht angebotene Elemente bleiben normal klickbar), ein Klick auf eine freie
+// Im Umbaumodus wählt ein Klick auf ein angebotenes Element dieses aus, ein Klick auf eine freie
 // Stelle setzt das Ziel (die nächste Stelle mit Platz samt Ring und freier gerader Bahn).
+// Getroffen ist ein Text nur auf seiner Ausdehnung (inkRect, 6 Pixel Rand), nicht auf der ganzen
+// Box: Neben einem kurzen Absatz liegt eine freie Stelle. Ist ein Element gewählt oder läuft ein
+// Transport, ist jeder Klick ein Ziel (auch auf Knöpfe und nicht angebotene Elemente, nichts
+// löst aus), außer auf ein anderes angebotenes Element (neue Wahl). Ohne Wahl sagt ein Klick auf
+// ein nicht angebotenes Element, warum es nicht geht, und löst ebenfalls nicht aus. Durch gehen
+// nur Klicks auf ignore (Kasten, Kopfzeile), auf freie Stellen ohne Wahl und Klicks per Tastatur.
 // Außerhalb des Modus und nach dem Tragen ist alles normal klickbar: Das DOM-Element selbst
 // wird per transform verschoben.
+//
+// Nach Vincents Rückmeldung („noch sehr buggy“, Website nach M6): Vorher reagierten Absätze auf
+// ihre ganze Box (die Kennzeile des Hero 1100 statt 427 Pixel), ein Klick daneben meldete „zu
+// schmal“ statt ein Ziel zu setzen, und mit gewähltem Element löste ein Klick auf einen Knopf
+// dessen Link aus.
 //
 // Arena ist der sichtbare Bereich unter einer festen Kopfzeile, wenn ein Transport beginnt; die
 // Leinwand liegt dort im Dokument (position: absolute), Scrollen nimmt sie mit wie die
@@ -21,6 +31,7 @@ import { RING, Transport, UMBAU, allTargets, arenaOf, assessLoad, snapTarget } f
 const MAX_STEPS_PER_FRAME = 8;
 const SNAP_S = 0.7; // Einrasten in Sekunden echter Zeit
 const MIN_DIST = 10; // kleinster Abstand von Start und Ziel, Körperlängen
+const HIT_PAD = 6; // Rand um die Ausdehnung eines Texts, in dem ein Klick ihn trifft (Pixel)
 
 /** Policy aus einer JSON-Datei (web/policies). */
 export async function loadPolicy(url) {
@@ -97,6 +108,7 @@ export class Umbau {
     let warte = null;
     this._scroll = () => {
       if (!this.active) return;
+      this._unmarkOutside(); // sofort: was nicht mehr ganz im Bild ist, ist nicht mehr wählbar
       clearTimeout(warte);
       warte = setTimeout(() => this._mark(), 1000); // nach dem Einblenden beim Scrollen (0,8 s)
     };
@@ -177,35 +189,68 @@ export class Umbau {
   }
 
   _mark() {
+    let lost = null;
     for (const { e } of this._cands()) {
       e.classList.remove("umbau-wahl", "umbau-nicht");
       if (!this.active) continue;
-      e.classList.add(this.assess(e).ok ? "umbau-wahl" : "umbau-nicht");
+      const a = this.assess(e);
+      e.classList.add(a.ok ? "umbau-wahl" : "umbau-nicht");
+      if (e === this.sel && !a.ok) lost = a.why;
     }
     document.documentElement.classList.toggle("umbau-an", this.active);
+    // gewähltes Element nicht mehr tragbar (etwa aus dem Bild gescrollt): Wahl aufheben und sagen, warum
+    if (lost) { this._select(null); this._status(`no:${lost}`); }
+  }
+
+  /** Beim Scrollen sofort: Umrandung weg bei allem, was nicht mehr ganz im Bild ist. */
+  _unmarkOutside() {
+    const top = this._arena().vp.top, h = innerHeight;
+    for (const e of document.querySelectorAll(".umbau-wahl")) {
+      const r = e.getBoundingClientRect();
+      if (r.top < top || r.bottom > h) { e.classList.remove("umbau-wahl"); e.classList.add("umbau-nicht"); }
+    }
+  }
+
+  /** Getroffener Kandidat: Texte nur auf ihrer Ausdehnung (plus HIT_PAD), sonst die Box. */
+  _hit(ev) {
+    const x = ev.clientX, y = ev.clientY;
+    for (const c of this._cands()) {
+      if (!c.e.contains(ev.target)) continue;
+      if (!c.text) return c;
+      const r = inkRect(c.e, true);
+      if (x >= r.left - HIT_PAD && x <= r.right + HIT_PAD && y >= r.top - HIT_PAD && y <= r.bottom + HIT_PAD) return c;
+    }
+    return null;
   }
 
   _onClick(ev) {
     if (!this.active) return;
     if (this.o.ignore && ev.target.closest(this.o.ignore)) return;
-    const c = this._cands().find(({ e }) => e.contains(ev.target));
-    // ein Klick aufs gewählte Element selbst ist ein Ziel (große Elemente landen oft nah daneben)
-    if (c && c.e !== this.sel) {
-      const running = this.tr && (this.tr.phase === "anmarsch" || this.tr.phase === "tragen");
-      const a = running ? null : this.assess(c.e);
-      // nicht tragbar: Der Klick geht durch (Knöpfe und Links behalten ihre Funktion), der Kasten sagt, warum
-      if (a && !a.ok) { this._status(`no:${a.why}`); return; }
-      ev.preventDefault();
-      ev.stopPropagation();
-      if (running) { this._status("busy"); return; }
-      this._select(c.e);
-      this._status();
+    if (ev.detail === 0) return; // Tastatur (Enter auf einem Link): keine Lage, normal auslösen
+    const running = !!this.tr && (this.tr.phase === "anmarsch" || this.tr.phase === "tragen");
+    const c = this._hit(ev);
+    const stop = () => { ev.preventDefault(); ev.stopPropagation(); };
+    if (running) {
+      stop();
+      // anderes Element während des Tragens: erst absetzen lassen; sonst Ziel versetzen
+      if (c && c.e !== this.el && this.assess(c.e).ok) { this._status("busy"); return; }
+      this._target(ev.clientX, ev.clientY);
       return;
     }
-    if (!this.sel && !(this.tr && (this.tr.phase === "anmarsch" || this.tr.phase === "tragen"))) return; // Klick geht durch
-    ev.preventDefault();
-    ev.stopPropagation();
-    this._target(ev.clientX, ev.clientY);
+    if (this.sel) {
+      stop();
+      // ein anderes angebotenes Element: neue Wahl; alles andere (auch das gewählte selbst,
+      // Knöpfe, nicht angebotene Elemente) ist ein Ziel
+      if (c && c.e !== this.sel && this.assess(c.e).ok) { this._select(c.e); this._status(); return; }
+      this._target(ev.clientX, ev.clientY);
+      return;
+    }
+    if (!c) return; // freie Stelle ohne Wahl: Klick geht durch
+    stop();
+    const a = this.assess(c.e);
+    if (!a.ok) { this._status(`no:${a.why}`); return; } // der Kasten sagt, warum
+    this._select(c.e);
+    this._status();
   }
 
   _select(e) {

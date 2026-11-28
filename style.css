@@ -180,6 +180,11 @@ html.umbau-an .umbau-wahl { outline: 2px dashed rgba(168, 50, 26, .45); outline-
 html.umbau-an .umbau-wahl:hover { outline-color: #a8321a; }
 html.umbau-an .umbau-gewaehlt { outline: 2px solid #a8321a; outline-offset: 4px; }
 html.umbau-ziel body { cursor: crosshair; }
+/* im Umbau lösen nicht angebotene Elemente nicht aus; mit Wahl ist jeder Klick ein Ziel (sim/umbau.js) */
+html.umbau-an .umbau-nicht, html.umbau-an .umbau-nicht * { cursor: not-allowed; }
+html.umbau-ziel :is(a, button, .umbau-nicht, .umbau-nicht *) { cursor: crosshair; }
+html.umbau-ziel .umbau-wahl:not(.umbau-gewaehlt) { cursor: pointer; }
+html.umbau-an :is(.kopf, #ameisen-hinweis) :is(a, button) { cursor: pointer; }
 .umbau-zielfeld { border: 2px dashed #a8321a; border-radius: 8px; background: rgba(168, 50, 26, .05); }
 @media (prefers-color-scheme: dark) { .ameisen-leinwand { filter: invert(1) hue-rotate(180deg); } }
 
