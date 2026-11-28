@@ -36,6 +36,9 @@
     .fliess p, .fliess li { margin: 0 0 10px; }
     .fliess ul { padding-left: 1.2em; }
     .fliess .leise, .leise { color: var(--muted); font-size: .92rem; }
+    .tabelle .ki { display: block; color: var(--muted); font-size: .75rem; font-weight: 400; }
+    .tabelle tr.hervor td { font-weight: 600; }
+    .fliess h3 { font-size: 1.05rem; margin: 22px 0 8px; }
     .marke { display: inline-block; font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase;
              color: var(--akzent); border: 1px solid var(--akzent); border-radius: 999px; padding: 2px 10px; }
   </style>
@@ -201,6 +204,70 @@
       </div>
     </section>
 
+    <section class="abschnitt" id="wenige">
+      <div class="wrap">
+        <div class="abschnitt-kopf rein">
+          <h2><span lang="de">Wenn nur 5 von 100 den Weg kennen</span><span lang="en">When only 5 of 100 know the way</span></h2>
+        </div>
+        <div class="fliess rein">
+          <p><span lang="de">Bei echten Ameisen kennen oft nur wenige das Ziel. Begleiterinnen markieren dann den Weg vor der Last mit Pheromon (Fonio et al. 2016). Stufe 4 ist deshalb dasselbe T-Rätsel, aber nur 5 von 100 Ameisen sehen den Nestkompass, die übrigen nie. Die Frage: Lernt die Policy, die wenigen Informierten zu verstärken, und nutzt sie dafür das Pheromon? Trainiert wurde aus der Policy mit fester Zahl von 100 Ameisen (Ablation oben), der Anteil Informierter fiel in der ersten Hälfte des Trainings von 100 auf 5 %, 200 Mio. Umgebungsschritte, drei Trainingsläufe. Kriterien und Protokoll standen vor dem Training fest.</span><span lang="en">In real ants, often only a few know the goal. Escorting ants then mark the way ahead of the load with pheromone (Fonio et al. 2016). Stage 4 is therefore the same T puzzle, but only 5 of 100 ants see the nest compass; the others never do. The question: does the policy learn to amplify the few informed ants, and does it use the pheromone for that? Training started from the policy with a fixed count of 100 ants (ablation above); the share of informed ants dropped from 100 to 5% during the first half of training, 200 million environment steps, three training runs. Criteria and protocol were fixed before training.</span></p>
+        </div>
+        <p class="zitat rein">
+          <span lang="de">Mit nur 5 von 100 informierten Ameisen löst die M6-Policy 40,0 % der 256 ungesehenen Szenarien. Vorab verlangt waren mindestens 60 %: <b>Kriterium K4a ist verfehlt.</b> Vertauscht man die Pheromonwerte in jedem Schritt zwischen den Ameisen, löst sie noch 39,3 %, also 98 % davon. Verlangt war höchstens die Hälfte: <b>Kriterium K4b ist verfehlt.</b> Dasselbe Rezept ohne Pheromon trainiert (Ablation 3) löst 46,4 %, nicht weniger (der Unterschied von +6,4 Punkten ist nicht belegt): Das Pheromon trägt nichts bei.</span>
+          <span lang="en">With only 5 of 100 ants informed, the M6 policy solves 40.0% of the 256 unseen scenarios. We required at least 60% in advance: <b>criterion K4a is not met.</b> If the pheromone values are swapped between the ants at every step, it still solves 39.3%, that is 98% of it. We required at most half: <b>criterion K4b is not met.</b> The same recipe trained without pheromone (ablation 3) solves 46.4%, no less (the difference of +6.4 points is not significant): the pheromone contributes nothing.</span>
+        </p>
+        <div class="tabelle rein">
+          <table>
+            <thead><tr><th><span lang="de">Stufe 4: 100 Ameisen, 5 informiert</span><span lang="en">Stage 4: 100 ants, 5 informed</span></th><th><span lang="de">gelöst</span><span lang="en">solved</span></th><th><span lang="de">Urteil</span><span lang="en">verdict</span></th></tr></thead>
+            <tbody>
+              <tr><td><span lang="de">Ameisenregel (Gegner)</span><span lang="en">Ant rule (opponent)</span></td><td>40,2 %<span class="ki">[34,4; 46,1]</span></td><td></td></tr>
+              <tr class="hervor"><td><span lang="de">M6-Policy</span><span lang="en">M6 policy</span></td><td>40,0 %<span class="ki">[21,9; 53,9]</span></td><td><span lang="de">K4a verfehlt (verlangt 60 %)</span><span lang="en">K4a not met (required 60%)</span></td></tr>
+              <tr class="hervor"><td><span lang="de">dieselbe, Pheromon je Schritt zwischen den Ameisen vertauscht</span><span lang="en">the same, pheromone swapped between ants at every step</span></td><td>39,3 %<span class="ki">[19,1; 56,6]</span></td><td><span lang="de">K4b verfehlt (Verhältnis 0,984, verlangt höchstens die Hälfte)</span><span lang="en">K4b not met (ratio 0.984, required at most half)</span></td></tr>
+              <tr><td><span lang="de">Ablation 3: dasselbe Rezept ohne Pheromon trainiert</span><span lang="en">Ablation 3: the same recipe trained without pheromone</span></td><td>46,4 %<span class="ki">[38,4; 54,3]</span></td><td><span lang="de">nicht schlechter (+6,4, nicht belegt)</span><span lang="en">no worse (+6.4, not significant)</span></td></tr>
+              <tr><td><span lang="de">M6-Policy, Pheromon gelöscht (mitberichtet)</span><span lang="en">M6 policy, pheromone erased (reported alongside)</span></td><td>9,0 %</td><td><span lang="de">fremde Eingabe, kein Test</span><span lang="en">unfamiliar input, not a test</span></td></tr>
+              <tr><td><span lang="de">Startpolicy vor dem Training auf Stufe 4</span><span lang="en">Initial policy before training on stage 4</span></td><td>3,8 %</td><td></td></tr>
+              <tr><td><span lang="de">Ansatz 1 aus der Demo oben</span><span lang="en">Approach 1 from the demo above</span></td><td>11,6 %</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="fliess rein" style="margin-top:16px">
+          <ul>
+            <li><span lang="de"><b>Gelernt ist trotzdem etwas:</b> Die M6-Policy verstärkt 5 % Informierte so gut wie die Ameisenregel (40,0 gegen 40,2 %, gepaart −0,3 Punkte), von 3,8 % vor dem Training. Bis zum Erfolg braucht sie dabei rund die halbe Zeit (84 gegen 151 s).</span><span lang="en"><b>Something is learned all the same:</b> the M6 policy amplifies 5% informed ants as well as the ant rule (40.0 vs 40.2%, paired −0.3 points), up from 3.8% before training. It takes about half the time to succeed (84 vs 151 s).</span></li>
+            <li><span lang="de"><b>Über welchen Kanal, ist offen.</b> Das Pheromon ist es nicht (Ablation 3). In Frage kommen die Dichte der Ameisen und die Mechanik der Last, nicht getrennt gemessen.</span><span lang="en"><b>Which channel carries it is open.</b> It is not the pheromone (ablation 3). Candidates are the density of the ants and the mechanics of the load, not measured separately.</span></li>
+            <li><span lang="de"><b>Keine Spur vor der Last:</b> Bei Fonio et al. 2016 trägt eine Pheromonmarke vor der Last im Mittel 1,39 Bit über die Richtung zum Nest, hier das Feld vor der Last 0,003 bis 0,020 Bit; die Informierten laufen nur voraus.</span><span lang="en"><b>No trail ahead of the load:</b> in Fonio et al. 2016 a pheromone mark ahead of the load carries 1.39 bits about the direction to the nest on average; here the field ahead of the load carries 0.003 to 0.020 bits; the informed ants merely run ahead.</span></li>
+          </ul>
+        </div>
+
+        <div class="tabelle rein" style="margin-top:22px">
+          <table>
+            <thead><tr>
+              <th><span lang="de">informiert</span><span lang="en">informed</span></th><th>100 %</th><th>25 %</th><th>10 %</th><th>5 %</th><th>2 %</th><th>0 %</th>
+            </tr></thead>
+            <tbody>
+              <tr><td><span lang="de">Ameisenregel</span><span lang="en">ant rule</span></td><td>60,5 %<span class="ki">[54,3; 66,4]</span></td><td>62,5 %<span class="ki">[56,6; 68,4]</span></td><td>53,1 %<span class="ki">[46,9; 59,4]</span></td><td>40,2 %<span class="ki">[34,4; 46,1]</span></td><td>17,6 %<span class="ki">[12,9; 22,7]</span></td><td>0,4 %<span class="ki">[0,0; 1,2]</span></td></tr>
+              <tr><td><span lang="de">Ansatz 1 (Demo)</span><span lang="en">approach 1 (demo)</span></td><td>75,5 %<span class="ki">[70,1; 80,7]</span></td><td>59,9 %<span class="ki">[34,8; 81,6]</span></td><td>25,5 %<span class="ki">[7,0; 52,7]</span></td><td>11,6 %<span class="ki">[1,6; 24,6]</span></td><td>2,6 %<span class="ki">[0,1; 6,4]</span></td><td>0,1 %<span class="ki">[0,0; 0,8]</span></td></tr>
+              <tr class="hervor"><td><span lang="de">M6-Policy</span><span lang="en">M6 policy</span></td><td>57,8 %<span class="ki">[52,1; 63,4]</span></td><td>60,8 %<span class="ki">[53,5; 67,7]</span></td><td>54,9 %<span class="ki">[38,3; 68,1]</span></td><td>40,0 %<span class="ki">[21,9; 53,9]</span></td><td>21,9 %<span class="ki">[10,2; 34,6]</span></td><td>2,9 %<span class="ki">[0,4; 6,5]</span></td></tr>
+              <tr><td><span lang="de">Ablation 3 (ohne Pheromon)</span><span lang="en">ablation 3 (no pheromone)</span></td><td>55,3 %<span class="ki">[50,0; 60,4]</span></td><td>66,0 %<span class="ki">[59,2; 73,0]</span></td><td>59,2 %<span class="ki">[51,6; 66,4]</span></td><td>46,4 %<span class="ki">[38,4; 54,3]</span></td><td>24,5 %<span class="ki">[15,6; 33,6]</span></td><td>1,3 %<span class="ki">[0,0; 3,5]</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="fliess rein" style="margin-top:14px">
+          <p class="leise"><span lang="de">Gelöste Szenarien der Stufe 4 mit gesetztem Anteil informierter Ameisen, je 256 ungesehene Szenarien, 100 Ameisen, Mittel über drei Trainingsläufe, in Klammern das 95-%-Intervall über Trainingsläufe und Szenarien. Bei 100 % ist es Stufe 3, die Aufgabe von oben.</span><span lang="en">Solved scenarios of stage 4 with a set share of informed ants, 256 unseen scenarios each, 100 ants, mean over three training runs, in brackets the 95% interval over training runs and scenarios. At 100% this is stage 3, the task from above.</span></p>
+          <ul>
+            <li><span lang="de"><b>Die M6-Policy hat die Kurve der Ameisenregel gelernt:</b> bei keinem Anteil von 2 bis 100 % gepaart verschieden. Ansatz 1 verstärkt wenige Informierte nicht, ab 10 % liegt er gepaart signifikant unter der Ameisenregel.</span><span lang="en"><b>The M6 policy has learned the ant rule’s curve:</b> at no share from 2 to 100% is it different in the paired comparison. Approach 1 does not amplify a few informed ants; from 10% down it is significantly below the ant rule in the paired comparison.</span></li>
+            <li><span lang="de"><b>Mit allen informiert ist die M6-Policy schlechter als Ansatz 1</b> (57,8 gegen 75,5 %), und das Pheromon nutzt sie nicht. Die Demo oben zeigt deshalb weiter Ansatz 1.</span><span lang="en"><b>With everyone informed the M6 policy is worse than approach 1</b> (57.8 vs 75.5%), and it does not use the pheromone. The demo above therefore still shows approach 1.</span></li>
+          </ul>
+          <h3><span lang="de">Diagnosen</span><span lang="en">Diagnostics</span></h3>
+          <ul>
+            <li><span lang="de"><b>Das Pheromon verhindert das Stehen der Last nicht.</b> Auf Stufe 3 steht die Last der M6-Policy 38 bis 39 % der Zeit, ohne Pheromon trainiert ebenso (39 bis 43 %), bei Ansatz 1 18 bis 24 %.</span><span lang="en"><b>The pheromone does not keep the load from stalling.</b> On stage 3 the M6 policy’s load stands still 38 to 39% of the time, trained without pheromone just the same (39 to 43%), with approach 1 18 to 24%.</span></li>
+            <li><span lang="de"><b>Stehen ist ein Zeichen des Scheiterns:</b> In erfolgreichen Episoden steht die Last der gelernten Policies 7 bis 10 % der Zeit, in abgebrochenen 60 bis 84 %.</span><span lang="en"><b>Stalling is a sign of failure:</b> in successful episodes the learned policies’ load stands still 7 to 10% of the time, in aborted ones 60 to 84%.</span></li>
+            <li><span lang="de"><b>Gegriffen wird wie bei der Ameisenregel:</b> 7 bis 8 % der Ameisen an der Last, rund zwei Drittel der Plätze belegt. Mehr Greifer machen die Last nicht schneller.</span><span lang="en"><b>Gripping looks like the ant rule:</b> 7 to 8% of the ants at the load, about two thirds of the slots taken. More grippers do not make the load faster.</span></li>
+            <li><span lang="de"><b>Bei 5 % Informierten sieht nur ein Teil der freien Ameisen die Last</b> (M6-Policy 16 bis 64 % je nach Trainingslauf, Ameisenregel 58 %), bei allen informiert die Mehrheit.</span><span lang="en"><b>With 5% informed, only some of the free ants see the load</b> (M6 policy 16 to 64% depending on the training run, ant rule 58%); with everyone informed, most of them do.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <section class="abschnitt">
       <div class="wrap">
         <div class="abschnitt-kopf rein">
@@ -211,7 +278,8 @@
             <li><span lang="de"><b>K2a verfehlt</b>, um 0,03 Punkte, nach zwei Ansätzen. Der zweite (ein Critic je Ameise) brach ein: Die Policy ließ los, nach einem Viertel des Trainings abgebrochen.</span><span lang="en"><b>K2a not met</b>, by 0.03 points, after two approaches. The second (one critic per ant) collapsed: the policy let go, and it was stopped after a quarter of the training.</span></li>
             <li><span lang="de"><b>Kein Pendeln.</b> Echte Ameisen und die Ameisenregel wechseln vor einer zu schmalen Lücke oft die Richtung. Die gelernte Policy tut das selten und gleitet stattdessen weit quer.</span><span lang="en"><b>No oscillation.</b> Real ants and the ant rule often switch direction in front of a gap that is too narrow. The learned policy rarely does and slides far sideways instead.</span></li>
             <li><span lang="de"><b>Ohne Zufall versagt sie im Großen.</b> Nimmt jede Ameise immer die wahrscheinlichste Aktion, löst die Policy bei 1000 Ameisen nur 27,2 % statt 65,1 %: Ohne gelegentliches Loslassen kreisen große Lasten.</span><span lang="en"><b>Without randomness it fails at scale.</b> If every ant always takes its most likely action, the policy solves only 27.2% instead of 65.1% with 1000 ants: without occasionally letting go, large loads go in circles.</span></li>
-            <li><span lang="de"><b>Pheromon und Gedächtnis bleiben ungenutzt.</b> Die Ameisen legen dauernd zufällig Pheromon ab und lesen keine Ortsinformation daraus: Vertauscht man die Werte zwischen den Ameisen, ändert sich nichts. Die Demo zeigt das Pheromon deshalb nicht als Spur.</span><span lang="en"><b>Pheromone and memory stay unused.</b> The ants deposit pheromone randomly all the time and read no positional information from it: swapping the values between ants changes nothing. The demo therefore does not show the pheromone as a trail.</span></li>
+            <li><span lang="de"><b>K4a und K4b verfehlt</b> (Stufe 4, 5 von 100 informiert): 40,0 % statt mindestens 60 %, und mit vertauschtem Pheromon bleiben 98 % davon statt höchstens der Hälfte. Ohne Pheromon trainiert ist die Policy nicht schlechter.</span><span lang="en"><b>K4a and K4b not met</b> (stage 4, 5 of 100 informed): 40.0% instead of at least 60%, and with the pheromone swapped 98% of it remains instead of at most half. Trained without pheromone, the policy is no worse.</span></li>
+            <li><span lang="de"><b>Pheromon und Gedächtnis bleiben ungenutzt, auch in Stufe 4.</b> Die Ameisen legen dauernd zufällig Pheromon ab und lesen keine Ortsinformation daraus: Vertauscht man die Werte zwischen den Ameisen, ändert sich nichts. Die Streuung der Ablage liegt seit dem ersten Training am Anschlag fest; ob eine Spur entsteht, wenn sie sinken kann, ist nicht geprüft. Die Demo zeigt das Pheromon deshalb nicht als Spur.</span><span lang="en"><b>Pheromone and memory stay unused, in stage 4 as well.</b> The ants deposit pheromone randomly all the time and read no positional information from it: swapping the values between ants changes nothing. The spread of the deposit has been stuck at its limit since the first training; whether a trail emerges once it can shrink has not been tested. The demo therefore does not show the pheromone as a trail.</span></li>
             <li><span lang="de"><b>12 % der Szenarien löst keiner</b>, weder die gelernte Policy in einem ihrer drei Trainingsläufe noch eine der beiden Regeln.</span><span lang="en"><b>No one solves 12% of the scenarios</b>, neither the learned policy in any of its three training runs nor either of the two rules.</span></li>
           </ul>
         </div>
